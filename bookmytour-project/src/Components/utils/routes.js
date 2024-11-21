@@ -5,5 +5,6 @@ export const routes = {
     signup: "/signup",
     login: "/login",
     listaUsuarios: "/usuarios",
+    agregarProducto: "/agregarProducto",
     notFound: "*"
 }

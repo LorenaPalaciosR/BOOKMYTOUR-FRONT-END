@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import Styles from "../Styles/Productos.module.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContextGlobalStates } from "../Components/utils/global.context";
+import { routes } from "../Components/utils/routes";
 
 const Productos = () => {
   const { state } = useContextGlobalStates();
@@ -127,7 +128,10 @@ const Productos = () => {
                 </div>
               </div>
             </div>
-            <button className={Styles.btnAgregar}>Agregar producto</button>
+            <Link to={routes.agregarProducto}>
+            <button className={Styles.btnAgregar}  >Agregar producto</button>
+            </Link>
+           
           </div>
         </div>
       </div>

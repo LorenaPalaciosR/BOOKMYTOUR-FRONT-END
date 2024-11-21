@@ -1,7 +1,6 @@
 import React, { useState, forwardRef } from "react";
 import DatePicker from "react-datepicker";
 import Styles from "../Styles/Form.module.css";
-
 import "react-datepicker/dist/react-datepicker.css";
 
 // eslint-disable-next-line react/display-name
