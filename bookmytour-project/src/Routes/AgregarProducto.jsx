@@ -12,33 +12,35 @@ const AgregarProducto = () => {
     disponibilidad: "",
     ciudad: "",
     duracion: "",
-    imagen: null,
+    imagen: [],
     resumen: "",
     descripcion: "",
-    itinerario: ""
+    itinerario: "",
   });
  const {createTour} =useTours()
  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
+    console.log(name, value);
     setFormData({
       ...formData,
       [name]: type === 'file' ? files[0] : value,
     });
+ 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const newTour = await createTour({
-        firstName: formData.nombre,
-        category: formData.categoria,
-        cost: formData.costo,
-        availability:formData.disponibilidad,
+        name: formData.nombre,
+        categoryName: formData.categoria,
+        costPerPerson: formData.costo,
+        datesAvailable:formData.disponibilidad,
         city: formData.ciudad,
         duration: formData.duracion,
         image: formData.imagen,
-        resume: formData.resumen,
+        summary: formData.resumen,
         description: formData.descripcion,
         itinerary: formData.itinerario,
       });  
@@ -136,7 +138,6 @@ const AgregarProducto = () => {
           <div>
             <p>Vista previa:</p>
             <img
-            src={formData.imagen ? URL.createObjectURL(formData.imagen) : ""}
               alt="Vista previa"
               style={{ maxWidth: "300px", marginTop: "10px" }}
             />
