@@ -8,9 +8,12 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   const { state } = useContextGlobalStates();
-  const [city, setCity] = useState("");
   const [randomTours, setRandomTours] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [filteredTours, setFilteredTours] = useState([]);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(state.data.length / itemsPerPage);
 
@@ -56,7 +59,7 @@ const Home = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: false
+          arrows: false,
         },
       },
     ],
@@ -94,13 +97,53 @@ const Home = () => {
     setRandomTours(filteredTours);
   }, [state.data]);
 
+  useEffect(() => {
+    // Filtrar los tours con base a los filtros aplicados
+    const filterTours = () => {
+      if (!searchText) {
+        setFilteredTours([]); // No mostrar sugerencias si no hay texto
+        return;
+      }
+
+      const normalizeText = (text) => {
+        return text
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, ""); // Elimina los diacríticos
+      };
+
+      const normalizedSearchText = normalizeText(searchText);
+
+      const filtered = state.data
+        .filter((tour) => {
+          // Normaliza las propiedades del tour antes de compararlas
+          const matchesText =
+            normalizeText(tour.nombre).includes(normalizedSearchText) ||
+            normalizeText(tour.descripcion).includes(normalizedSearchText) ||
+            normalizeText(tour.ubicacion).includes(normalizedSearchText);
+
+          // Filtrar por fechas (si se proporcionan)
+          const matchesDates =
+            (!startDate || new Date(tour.duracion) >= new Date(startDate)) &&
+            (!endDate || new Date(tour.duracion) <= new Date(endDate));
+
+          return matchesText && matchesDates;
+        })
+        .slice(0, 7); // Limitar a un máximo de 7 resultados
+
+      setFilteredTours(filtered);
+    };
+
+    filterTours();
+  }, [searchText, startDate, endDate, state.data]);
+
   const handleChange = (e) => {
-    setCity(e.target.value);
+    setSearchText(e.target.value.toLowerCase());
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Buscar:", city);
+    console.log("Tours filtrados: ", filteredTours);
   };
 
   const currentProducts = state.data.slice(
@@ -116,32 +159,56 @@ const Home = () => {
           src="/images/imagen-marca.png"
           alt="Main-Image"
         />
-        <form id={Styles.container} onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={city}
-            onChange={handleChange}
-            placeholder="Ingresa la ciudad o región"
-            id={Styles.input}
-          />
-          <button
-            id={Styles.btnSubmit}
-            className={Styles.btnsForm}
-            type="submit"
-          >
-            Buscar
-          </button>
-          <button
-            type="button"
-            id={Styles.btnFilter}
-            className={Styles.btnsForm}
-          >
-            <img
-              id={Styles.filterIcon}
-              src="/images/filterIcon.svg"
-              alt="Filter-Icon"
+        <form onSubmit={handleSubmit}>
+          <div id={Styles.container}>
+            <input
+              type="text"
+              value={searchText}
+              onChange={handleChange}
+              placeholder="Busca tours o destinos..."
+              title="Encuentra tours adaptados a tus intereses, fechas y destinos. Explora experiencias únicas."
+              id={Styles.input}
             />
-          </button>
+            <button
+              id={Styles.btnSubmit}
+              className={Styles.btnsForm}
+              type="submit"
+            >
+              Buscar
+            </button>
+            <button
+              type="button"
+              id={Styles.btnFilter}
+              className={Styles.btnsForm}
+            >
+              <img
+                id={Styles.filterIcon}
+                src="/images/filterIcon.svg"
+                alt="Filter-Icon"
+              />
+            </button>
+            {filteredTours.length > 0 && (
+              <ul id={Styles.suggestions}>
+                {filteredTours.map((tour) => (
+                  <Link
+                    className={Styles.filteredTourItem}
+                    onClick={() => {
+                      setFilteredTours([]);
+                      setSearchText("");
+                    }}
+                    key={tour.id}
+                    to={`${window.location.origin}/detalle/${tour.id}`}
+                  >
+                    <img src={tour.imagenes[0]} alt={tour.nombre} />
+                    <div className={Styles.filteredTourInfo}>
+                      <h3 className={Styles.tourTitle}>{tour.nombre}</h3>
+                      <p className={Styles.resumen}>{tour.resumen}</p>
+                    </div>
+                  </Link>
+                ))}
+              </ul>
+            )}
+          </div>
         </form>
       </div>
       <div className={Styles.sectionContainer}>
