@@ -10,7 +10,12 @@ export const tourService = {
     },
     
     createTour: async (tourData) => {
-      return await apiClient.post('/tours', tourData);
+      return await apiClient.post("/tours", tourData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          
+        },
+      });
     },
     
     updateTour: async (id, tourData) => {

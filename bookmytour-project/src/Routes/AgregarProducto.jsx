@@ -1,4 +1,4 @@
-import MyCalendar from "../Components/MyCalendar";
+
 import {useTours} from "../hooks/useTours";
 import Styles from "../Styles/AgregarProducto.module.css";
 import { useState } from "react";
@@ -54,7 +54,7 @@ const AgregarProducto = () => {
       }
     } catch (err) {
       console.error("Error al crear el tour:", err);
-      alert("Hubo un error al crear el tour");
+      toast.error("Hubo un error al crear el tour");
     }
     
   };
@@ -83,11 +83,11 @@ const AgregarProducto = () => {
               onChange={handleChange} 
             >
               <option value="" disabled></option>
-              <option value="aventura">Aventura</option>
-              <option value="naturaleza">Naturaleza viva</option>
-              <option value="aromas">Aromas y sabores</option>
-              <option value="urbana">Vibra urbana</option>
-              <option value="paraiso">Paraisos del caribe</option>
+              <option value="Aventura">Aventura</option>
+              <option value="Naturaleza Viva">Naturaleza viva</option>
+              <option value="Aromas y Sabores">Aromas y sabores</option>
+              <option value="Vibra Urbana">Vibra urbana</option>
+              <option value="Paraísos del Caribe">Paraisos del caribe</option>
             </select>
           </label>
           <label>
@@ -99,12 +99,7 @@ const AgregarProducto = () => {
               onChange={handleChange} 
             />
           </label>
-          <label>
-            Disponibilidad
-            <div className={Styles.calendario}>
-              <MyCalendar />
-            </div>
-          </label>
+        
           <label>
             Ciudad
             <input
@@ -138,6 +133,7 @@ const AgregarProducto = () => {
           <div>
             <p>Vista previa:</p>
             <img
+               
               alt="Vista previa"
               style={{ maxWidth: "300px", marginTop: "10px" }}
             />
@@ -173,13 +169,14 @@ const AgregarProducto = () => {
             />
           </label>
         </div>
+        </form>
         <div className={Styles.botones}>
           <button className={Styles.btn} onClick={() => navigate("/productos")}>Cancelar</button>
           <button type="submit" className={Styles.button}>
             Guardar
           </button>
         </div>
-      </form>
+     
     </div>
   );
 };
