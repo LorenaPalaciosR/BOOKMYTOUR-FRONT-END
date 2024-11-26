@@ -1,12 +1,8 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
-<<<<<<< HEAD
-import Styles from "../Styles/Form.module.css";
-=======
 import CustomCalendarInput from "./CustomCalendarInput";
 import { validateRange, calculateEndDate } from "./utils/calendar";
 
->>>>>>> 870272cb26f22769c7dd423b49ac659223deaf9f
 import "react-datepicker/dist/react-datepicker.css";
 
 const MyCalendar = ({ customProps, duration }) => {
