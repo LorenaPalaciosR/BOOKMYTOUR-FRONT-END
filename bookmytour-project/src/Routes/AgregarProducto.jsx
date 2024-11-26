@@ -55,7 +55,7 @@ const AgregarProducto = () => {
     formDataToSend.append("itinerary", formData.itinerario);
 
     selectedFiles.forEach((file) => {
-      formDataToSend.append("images[]", file);
+      formDataToSend.append("imagenes", file);
     });
 
     try {
@@ -65,6 +65,8 @@ const AgregarProducto = () => {
         toast.success("Producto creado exitosamente!", {
           position: "top-center",
         });
+        previewUrls.forEach((url) => URL.revokeObjectURL(url));
+        setPreviewUrls([]);
         setTimeout(() => {
           navigate("/productos");
         }, 1000);
