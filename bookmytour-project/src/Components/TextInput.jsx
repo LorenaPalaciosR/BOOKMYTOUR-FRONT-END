@@ -9,6 +9,7 @@ const TextInput = ({
   value,
   onChange,
   name,
+  customClass,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -17,7 +18,7 @@ const TextInput = ({
   };
 
   return (
-    <div className={Styles.formField}>
+    <div className={customClass ? customClass : Styles.formField}>
       <label className={Styles.formLabel} htmlFor={label}>
         {label}
       </label>
