@@ -3,6 +3,8 @@ import Styles from "../Styles/Productos.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useContextGlobalStates } from "../Components/utils/global.context";
 import { routes } from "../Components/utils/routes";
+import { useTours } from "../hooks/useTours";
+import { toast } from "react-toastify";
 
 const Productos = () => {
   const { state } = useContextGlobalStates();
@@ -12,6 +14,7 @@ const Productos = () => {
   const totalPages = Math.ceil(state.data.length / itemsPerPage);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const { deleteTour } = useTours();
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -26,6 +29,20 @@ const Productos = () => {
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const deletedTour = await deleteTour(id);
+      if (deletedTour.success) {
+        toast.success("Producto eliminado exitosamente!", {
+          position: "top-center",
+        });
+      }
+    } catch (err) {
+      console.error("Error al eliminar el producto:", err);
+      toast.error("Hubo un error al eliminar el producto");
     }
   };
 
@@ -68,10 +85,16 @@ const Productos = () => {
         <td>{item.categoryName}</td>
         <td>{item.cityNames.join(", ")}</td>
         <td>
-          <button className={Styles.editBtn}>
+          <button
+            className={Styles.editBtn}
+            onClick={() => navigate(`/editarProducto/${item.tourId}`)}
+          >
             <i className="fa-pencil fa-solid"></i>
           </button>
-          <button className={Styles.deleteBtn}>
+          <button
+            className={Styles.deleteBtn}
+            onClick={() => handleDelete(item.tourId)}
+          >
             <i className="fa-solid fa-trash"></i>
           </button>
         </td>
