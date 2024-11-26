@@ -32,9 +32,7 @@ export const ContextProvider = ({ children }) => {
     }
 
     async function fetchData() {
-      const response = await fetch(
-        "https://bookmytourjson.s3.us-east-1.amazonaws.com/tours.json"
-      );
+      const response = await fetch("http://34.239.141.92:8080/api/tours");
       const data = await response.json();
       dispatch({ type: "GET_TOURS", payload: data });
     }

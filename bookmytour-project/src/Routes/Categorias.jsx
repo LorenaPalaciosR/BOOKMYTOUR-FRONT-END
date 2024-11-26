@@ -21,21 +21,25 @@ const Categorias = () => {
   }, [nombre]);
 
   // Find the selected category
-  const selectedCategory = state.categories.find(category => category.nombre === nombre);
+  const selectedCategory = state.categories.find(
+    (category) => category.nombre === nombre
+  );
 
   // If the category is found, display the image and description
-  const categoryImage = selectedCategory ? selectedCategory.imagen : '';
-  const categoryDescription = selectedCategory ? selectedCategory.descripcion : '';
+  const categoryImage = selectedCategory ? selectedCategory.imagen : "";
+  const categoryDescription = selectedCategory
+    ? selectedCategory.descripcion
+    : "";
 
   // Filtrar los elementos de acuerdo a la categoría y al filtro de búsqueda
   let filteredData = state.data.filter((tour) => {
-    const isInCategory = tour.categorias === nombre;
+    const isInCategory = tour.categoryName === nombre;
     const matchesFilter = filter
       ? tour.nombre.toLowerCase().includes(filter.toLowerCase())
       : true;
     return isInCategory && matchesFilter;
   });
- 
+
   // Ordenar los datos filtrados si se ha seleccionado un orden
   if (sortOrder === "asc") {
     filteredData = filteredData.sort((a, b) =>
@@ -79,11 +83,11 @@ const Categorias = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-  
+
   const handleChange = (e) => {
     setFilter(e.target.value);
   };
-    
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Buscar:", filter);
@@ -114,7 +118,9 @@ const Categorias = () => {
             <Link
               to={`${window.location.origin}/categorias/${item.nombre}`}
               key={item.nombre}
-              className={`btnsCategorias ${item.nombre === nombre ? "active" : ""}`}
+              className={`btnsCategorias ${
+                item.nombre === nombre ? "active" : ""
+              }`}
             >
               {item.nombre}
             </Link>
@@ -163,12 +169,12 @@ const Categorias = () => {
         <div className="cardsContainer">
           {currentItems.map((tour) => (
             <Card
-              id={tour.id}
-              key={tour.id}
-              title={tour.nombre}
+              id={tour.tourId}
+              key={tour.tourId}
+              title={tour.name}
               img={tour.imagenes[0]}
-              price={tour.precio}
-              description={tour.resumen}
+              price={tour.costPerPerson}
+              description={tour.summary}
             />
           ))}
         </div>

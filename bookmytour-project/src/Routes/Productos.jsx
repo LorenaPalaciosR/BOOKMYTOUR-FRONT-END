@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Styles from "../Styles/Productos.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useContextGlobalStates } from "../Components/utils/global.context";
@@ -62,14 +62,14 @@ const Productos = () => {
     );
 
     return selectedData.map((item) => (
-      <tr key={item.id}>
-        <td>{item.id}</td>
-        <td>{item.nombre}</td>
-        <td>{item.categorias}</td>
-        <td>{item.ubicacion}</td>
+      <tr key={item.tourId}>
+        <td>{item.tourId}</td>
+        <td>{item.name}</td>
+        <td>{item.categoryName}</td>
+        <td>{item.cityNames.join(", ")}</td>
         <td>
           <button className={Styles.editBtn}>
-            <i className="fa-solid fa-pencil"></i>
+            <i className="fa-pencil fa-solid"></i>
           </button>
           <button className={Styles.deleteBtn}>
             <i className="fa-solid fa-trash"></i>
@@ -129,9 +129,8 @@ const Productos = () => {
               </div>
             </div>
             <Link to={routes.agregarProducto}>
-            <button className={Styles.btnAgregar}  >Agregar producto</button>
+              <button className={Styles.btnAgregar}>Agregar producto</button>
             </Link>
-           
           </div>
         </div>
       </div>
@@ -157,7 +156,7 @@ const Productos = () => {
           disabled={currentPage === 1}
           className={Styles.arrowButton}
         >
-          <i className="fa-solid fa-arrow-left"></i>
+          <i className="fa-arrow-left fa-solid"></i>
         </button>
         {Array.from({ length: totalPages }, (_, index) => (
           <button
@@ -173,7 +172,7 @@ const Productos = () => {
           disabled={currentPage === totalPages}
           className={Styles.arrowButton}
         >
-          <i className="fa-solid fa-arrow-right"></i>
+          <i className="fa-arrow-right fa-solid"></i>
         </button>
       </div>
     </div>
