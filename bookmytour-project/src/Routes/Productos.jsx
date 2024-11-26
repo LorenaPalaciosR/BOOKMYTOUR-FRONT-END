@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContextGlobalStates } from "../Components/utils/global.context";
 import { routes } from "../Components/utils/routes";
 import { useTours } from "../hooks/useTours";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const Productos = () => {
   const { state } = useContextGlobalStates();
@@ -198,6 +198,7 @@ const Productos = () => {
           <i className="fa-arrow-right fa-solid"></i>
         </button>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 };

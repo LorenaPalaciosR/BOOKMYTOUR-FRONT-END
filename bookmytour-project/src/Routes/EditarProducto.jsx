@@ -1,7 +1,7 @@
 import { useTours } from "../hooks/useTours";
 import Styles from "../Styles/AgregarProducto.module.css";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import TextInput from "../Components/TextInput";
 import Button from "../Components/Button";
@@ -85,6 +85,7 @@ const EditarProducto = () => {
 
   return (
     <div className={Styles.mainContainer}>
+      <ToastContainer position="top-center" />
       <div className={Styles.container}>
         <h1>Editar Producto</h1>
         <form className={Styles.form} onSubmit={handleSubmit}>
