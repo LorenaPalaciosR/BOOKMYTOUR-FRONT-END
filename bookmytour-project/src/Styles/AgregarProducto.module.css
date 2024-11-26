@@ -1,17 +1,45 @@
-.container {
-  display: flex;
-  flex-direction: column;
+.mainContainer {
   width: 100%;
-  padding: 20px;
-  min-height: 100vh;
+  height: 90dvh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 2rem 0;
 }
 
-.form {
+.container {
   display: flex;
-  flex-direction: row; /* Organiza formulario1 y formulario2 en fila */
-  justify-content: space-between;
-  align-items: flex-start;
-  gap:20px;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+}
+
+.formInput label {
+  color: #464646;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.formInput input::placeholder {
+  color: #aaaaaa;
+  font-weight: 200;
+}
+
+select {
+  width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: #ffffff84;
+}
+
+.formContainer {
+  display: flex;
+  width: 100%;
+  gap: 60px;
 }
 
 .formulario1,
@@ -38,19 +66,10 @@
 
 .botones {
   display: flex;
-  justify-content: flex-end; 
-  margin-top: 20px;
+  gap: 20px;
+  width: 100%;
 }
 
-.btn {
-  width: 200px;
-  height: 48px;
-  border-color: #04adbf;
-  background-color: #ffff;
-  color: #04adbf;
-  border-radius: 10px;
-  margin-right: 20px;
-}
 
 .button {
   width: 200px;
@@ -59,4 +78,28 @@
   color: #ffff;
   border-color: #04adbf;
   border-radius: 10px;
+}
+
+label {
+  color: #464646;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+textarea {
+  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: #ffffff84;
+  width: 100%;
+  padding: 10px;
+}
+
+textarea::placeholder {
+  color: #aaaaaa;
+  font-weight: 200;
+  font-family: "Manrope";
 }

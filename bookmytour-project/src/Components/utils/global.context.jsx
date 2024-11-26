@@ -27,7 +27,7 @@ export const ContextProvider = ({ children }) => {
     if (user) {
       dispatch({
         type: "SET_USER",
-        payload: JSON.parse(user), 
+        payload: JSON.parse(user),
       });
     }
 
@@ -38,6 +38,7 @@ export const ContextProvider = ({ children }) => {
       const data = await response.json();
       dispatch({ type: "GET_TOURS", payload: data });
     }
+
     fetchData();
     async function fetchCategories() {
       const response = await fetch(

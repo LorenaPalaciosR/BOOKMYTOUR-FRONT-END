@@ -1,9 +1,11 @@
-
-import {useTours} from "../hooks/useTours";
+import { useTours } from "../hooks/useTours";
 import Styles from "../Styles/AgregarProducto.module.css";
 import { useState } from "react";
-import {  toast } from "react-toastify";
-import {useNavigate}  from "react-router-dom";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import TextInput from "../Components/TextInput";
+import Button from "../Components/Button";
+
 const AgregarProducto = () => {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -17,166 +19,201 @@ const AgregarProducto = () => {
     descripcion: "",
     itinerario: "",
   });
- const {createTour} =useTours()
- const navigate = useNavigate();
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
+  const { createTour } = useTours();
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    console.log(name, value);
     setFormData({
       ...formData,
-      [name]: type === 'file' ? files[0] : value,
+      [name]: type === "file" ? files[0] : value,
     });
- 
+  };
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedFiles(files);
+
+    const urls = files.map((file) => URL.createObjectURL(file));
+    setPreviewUrls(urls);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("name", formData.nombre);
+    formDataToSend.append("categoryName", formData.categoria);
+    formDataToSend.append("costPerPerson", formData.costo);
+    formDataToSend.append("datesAvailable", formData.disponibilidad);
+    formDataToSend.append("city", formData.ciudad);
+    formDataToSend.append("duration", formData.duracion);
+    formDataToSend.append("summary", formData.resumen);
+    formDataToSend.append("description", formData.descripcion);
+    formDataToSend.append("itinerary", formData.itinerario);
+
+    selectedFiles.forEach((file) => {
+      formDataToSend.append("images[]", file);
+    });
+
     try {
-      const newTour = await createTour({
-        name: formData.nombre,
-        categoryName: formData.categoria,
-        costPerPerson: formData.costo,
-        datesAvailable:formData.disponibilidad,
-        city: formData.ciudad,
-        duration: formData.duracion,
-        image: formData.imagen,
-        summary: formData.resumen,
-        description: formData.descripcion,
-        itinerary: formData.itinerario,
-      });  
+      const newTour = await createTour(formDataToSend);
+
       if (newTour.token) {
-        toast.success("Cuenta creada exitosamente!", {
+        toast.success("Producto creado exitosamente!", {
           position: "top-center",
         });
         setTimeout(() => {
-          navigate("/productos"); 
+          navigate("/productos");
         }, 1000);
       }
     } catch (err) {
-      console.error("Error al crear el tour:", err);
-      toast.error("Hubo un error al crear el tour");
+      console.error("Error al crear el producto:", err);
+      toast.error("Hubo un error al crear el producto");
     }
-    
   };
 
   return (
-    <div className={Styles.container}>
-      <h1>Agregar Producto</h1>
-      <form className={Styles.form} onSubmit={handleSubmit}>
-        <div className={Styles.formulario1}>
-          <label htmlFor="name">
-            Nombre:
-            <input
-              type="text"
-              id="name"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange} 
-            />
-          </label>
-          <label htmlFor="select">
-            Categoría
-            <select
-              id="select"
-              name="categoria"
-              value={formData.categoria}
-              onChange={handleChange} 
-            >
-              <option value="" disabled></option>
-              <option value="Aventura">Aventura</option>
-              <option value="Naturaleza Viva">Naturaleza viva</option>
-              <option value="Aromas y Sabores">Aromas y sabores</option>
-              <option value="Vibra Urbana">Vibra urbana</option>
-              <option value="Paraísos del Caribe">Paraisos del caribe</option>
-            </select>
-          </label>
-          <label>
-            Costo
-            <input
-              type="number"
-              name="costo"
-              value={formData.costo}
-              onChange={handleChange} 
-            />
-          </label>
-        
-          <label>
-            Ciudad
-            <input
-              type="text"
-              name="ciudad"
-              value={formData.ciudad}
-              onChange={handleChange} 
-            />
-          </label>
-          <label>
-            Duración
-            <input
-              type="text"
-              name="duracion"
-              value={formData.duracion}
-              onChange={handleChange} 
-            />
-          </label>
-        </div>
+    <div className={Styles.mainContainer}>
+      <div className={Styles.container}>
+        <h1>Agregar Producto</h1>
+        <form className={Styles.form} onSubmit={handleSubmit}>
+          <section className={Styles.formContainer}>
+            <div className={Styles.formulario1}>
+              <TextInput
+                label="Nombre"
+                placeholder="Ingresa el nombre del tour"
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                customClass={Styles.formInput}
+              />
+              <div>
+                <label htmlFor="select">Categoría:</label>
+                <select id="select" name="categoria" onChange={handleChange}>
+                  <option value="" disabled selected>
+                    Selecciona una categoría
+                  </option>
+                  <option value="Aventura">Aventura</option>
+                  <option value="Naturaleza Viva">Naturaleza viva</option>
+                  <option value="Aromas y Sabores">Aromas y sabores</option>
+                  <option value="Vibra Urbana">Vibra urbana</option>
+                  <option value="Paraísos del Caribe">
+                    Paraisos del caribe
+                  </option>
+                </select>
+              </div>
 
-        <div className={Styles.formulario2}>
-          <label>
-            Sube una imagen:
-            <input
-              type="file"
-              name="imagen"
-              accept="image/*"
-              onChange={handleChange}
-            />
-          </label>
-          <div>
-            <p>Vista previa:</p>
-            <img
-               
-              alt="Vista previa"
-              style={{ maxWidth: "300px", marginTop: "10px" }}
-            />
-          </div>
-          <label>
-            Resumen
-            <textarea
-              rows={5}
-              cols={50}
-              name="resumen"
-              value={formData.resumen}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Descripción General
-            <textarea
-              rows={5}
-              cols={50}
-              name="descripcion"
-              value={formData.descripcion}
-              onChange={handleChange} 
-            />
-          </label>
-          <label>
-            Itinerario
-            <textarea
-              rows={5}
-              cols={50}
-              name="itinerario"
-              value={formData.itinerario}
-              onChange={handleChange} 
-            />
-          </label>
-        </div>
+              <TextInput
+                label="Costo"
+                placeholder="Ingresa el costo del tour"
+                type="number"
+                name="costo"
+                value={formData.costo}
+                onChange={handleChange}
+                customClass={Styles.formInput}
+              />
+              <TextInput
+                label="Ciudad"
+                placeholder="Ingresa la ciudad del tour"
+                type="text"
+                name="ciudad"
+                value={formData.ciudad}
+                onChange={handleChange}
+                customClass={Styles.formInput}
+              />
+              <TextInput
+                label="Duración"
+                placeholder="Ingresa la duración del tour, por ejemplo: 3 dias 4 noches"
+                type="text"
+                name="duracion"
+                value={formData.duracion}
+                onChange={handleChange}
+                customClass={Styles.formInput}
+              />
+              <div>
+                <label>Descripción General:</label>
+                <textarea
+                  rows={5}
+                  name="descripcion"
+                  placeholder="Ingresa una descripción general del tour"
+                  value={formData.descripcion}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <section className={Styles.formulario2}>
+              <div>
+                <label>
+                  Sube imágenes:
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ marginBottom: "10px" }}
+                  />
+                </label>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                  }}
+                >
+                  {previewUrls.map((url, index) => (
+                    <img
+                      key={index}
+                      src={url}
+                      alt={`Preview ${index + 1}`}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                        border: "1px solid #ddd",
+                        borderRadius: "5px",
+                      }}
+                    />
+                  ))}
+                </div>
+                <div>
+                  <label>Resumen:</label>
+                  <textarea
+                    rows={5}
+                    name="resumen"
+                    placeholder="Ingresa un resumen breve del tour"
+                    value={formData.resumen}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <label>Itinerario:</label>
+                  <textarea
+                    rows={5}
+                    name="itinerario"
+                    placeholder="Ingresa un itinerario detallado del tour"
+                    value={formData.itinerario}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className={Styles.botones}>
+                <Button
+                  label="Cancelar"
+                  variant="secondary"
+                  type="button"
+                  onClick={() => navigate("/productos")}
+                />
+                <Button label="Guardar" variant="primary" type="submit" />
+              </div>
+            </section>
+          </section>
         </form>
-        <div className={Styles.botones}>
-          <button className={Styles.btn} onClick={() => navigate("/productos")}>Cancelar</button>
-          <button type="submit" className={Styles.button}>
-            Guardar
-          </button>
-        </div>
-     
+      </div>
     </div>
   );
 };
