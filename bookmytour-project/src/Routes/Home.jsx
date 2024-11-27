@@ -11,9 +11,11 @@ const Home = () => {
   const [randomTours, setRandomTours] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [minDays, setMinDays] = useState("");
+  const [maxDays, setMaxDays] = useState("");
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [filteredTours, setFilteredTours] = useState([]);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 635);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(state.data.length / itemsPerPage);
 
@@ -65,6 +67,10 @@ const Home = () => {
     ],
   };
 
+  const toggleFilterMenu = () => {
+    setIsFilterMenuOpen((prev) => !prev);
+  };
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -98,44 +104,70 @@ const Home = () => {
   }, [state.data]);
 
   useEffect(() => {
-    // Filtrar los tours con base a los filtros aplicados
-    const filterTours = () => {
-      if (!searchText) {
-        setFilteredTours([]); // No mostrar sugerencias si no hay texto
-        return;
-      }
-
-      const normalizeText = (text) => {
-        return text
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, ""); // Elimina los diacríticos
-      };
-
-      const normalizedSearchText = normalizeText(searchText);
-
-      const filtered = state.data
-        .filter((tour) => {
-          // Normaliza las propiedades del tour antes de compararlas
-          const matchesText =
-            normalizeText(tour.nombre).includes(normalizedSearchText) ||
-            normalizeText(tour.descripcion).includes(normalizedSearchText) ||
-            normalizeText(tour.ubicacion).includes(normalizedSearchText);
-
-          // Filtrar por fechas (si se proporcionan)
-          const matchesDates =
-            (!startDate || new Date(tour.duracion) >= new Date(startDate)) &&
-            (!endDate || new Date(tour.duracion) <= new Date(endDate));
-
-          return matchesText && matchesDates;
-        })
-        .slice(0, 7); // Limitar a un máximo de 7 resultados
-
-      setFilteredTours(filtered);
+    // Detectar tamaño de la pantalla y ajustar la lógica de búsqueda
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 635); // Actualiza el estado dependiendo del tamaño de la ventana
     };
 
-    filterTours();
-  }, [searchText, startDate, endDate, state.data]);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Filtrar los tours con base a los filtros aplicados
+  const filterTours = () => {
+    if (!searchText && !minDays && !maxDays) {
+      // Si no hay filtros activos, no aplicar ninguno y salir
+      setFilteredTours([]); 
+      return;
+    }
+
+    const normalizeText = (text) => {
+      return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, ""); // Elimina los diacríticos
+    };
+
+    const normalizedSearchText = normalizeText(searchText);
+
+    const filtered = state.data
+      .filter((tour) => {
+        // Normaliza las propiedades del tour antes de compararlas
+        const matchesText =
+          normalizeText(tour.nombre).includes(normalizedSearchText) ||
+          normalizeText(tour.descripcion).includes(normalizedSearchText) ||
+          normalizeText(tour.ubicacion).includes(normalizedSearchText);
+
+        // Filtrar por duracion (si se proporcionan)
+        const matchesDates = (() => {
+          const extractDays = (duration) => {
+            const match = duration.match(/(\d+)\s*días/);
+            return match ? parseInt(match[1], 10) : 0;
+          };
+
+          const tourDays = extractDays(tour.duracion);
+
+          return (
+            (!minDays || tourDays >= parseInt(minDays, 10)) &&
+            (!maxDays || tourDays <= parseInt(maxDays, 10))
+          );
+        })();
+
+        return matchesText && matchesDates;
+      })
+      .slice(0, 7); // Limitar a un máximo de 7 resultados
+
+    setFilteredTours(filtered);
+  };
+
+  useEffect(() => {
+    // Este es el caso cuando es móvil, el filtro se ejecuta al escribir
+    if (!isDesktop) {
+      filterTours();
+    }
+  }, [searchText, minDays, maxDays, state.data, isDesktop]);
 
   const handleChange = (e) => {
     setSearchText(e.target.value.toLowerCase());
@@ -143,7 +175,10 @@ const Home = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Tours filtrados: ", filteredTours);
+    if (isDesktop) {
+      // Si es desktop, ejecutar la búsqueda solo cuando se hace submit
+      filterTours();
+    }
   };
 
   const currentProducts = state.data.slice(
@@ -173,6 +208,7 @@ const Home = () => {
               id={Styles.btnSubmit}
               className={Styles.btnsForm}
               type="submit"
+              onClick={() => setIsFilterMenuOpen(false)}
             >
               Buscar
             </button>
@@ -180,6 +216,7 @@ const Home = () => {
               type="button"
               id={Styles.btnFilter}
               className={Styles.btnsForm}
+              onClick={toggleFilterMenu}
             >
               <img
                 id={Styles.filterIcon}
@@ -187,6 +224,30 @@ const Home = () => {
                 alt="Filter-Icon"
               />
             </button>
+
+            {/* Menú desplegable */}
+            {isFilterMenuOpen && (
+              <div className={Styles.filterMenu}>
+                <label htmlFor="minDays">Mínimo de días:</label>
+                <input
+                  type="number"
+                  id="minDays"
+                  value={minDays}
+                  onChange={(e) => setMinDays(e.target.value)}
+                  placeholder="Ej: 3"
+                />
+
+                <label htmlFor="maxDays">Máximo de días:</label>
+                <input
+                  type="number"
+                  id="maxDays"
+                  value={maxDays}
+                  onChange={(e) => setMaxDays(e.target.value)}
+                  placeholder="Ej: 7"
+                />
+              </div>
+            )}
+
             {filteredTours.length > 0 && (
               <ul id={Styles.suggestions}>
                 {filteredTours.map((tour) => (

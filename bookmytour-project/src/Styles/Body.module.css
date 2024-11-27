@@ -268,6 +268,73 @@
   position: relative;
 }
 
+.filterMenu {
+  position: absolute;
+  top: 60px; /* Ajusta según el botón */
+  right: 11%; /* Alineación respecto al botón */
+  background-color: #ffffff; /* Fondo blanco para contraste */
+  border: 2px solid #f1f1f1; /* Borde claro para un diseño limpio */
+  border-radius: 12px; /* Bordes redondeados */
+  padding: 20px; /* Espaciado interno */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra para profundidad */
+  z-index: 1000; /* Asegura que esté en el frente */
+  width: 150px; /* Ancho del menú */
+  animation: fadeIn 0.3s ease; /* Animación para entrada suave */
+}
+
+.filterMenu label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333; /* Texto oscuro */
+  margin-bottom: 5px;
+}
+
+.filterMenu input {
+  width: 90%; /* Ocupa todo el ancho */
+  margin-bottom: 15px; /* Espacio entre campos */
+  padding: 10px; /* Espaciado interno */
+  border: 1px solid #ddd; /* Borde claro */
+  border-radius: 8px; /* Bordes suaves */
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.filterMenu input:focus {
+  outline: none;
+  border-color: #04adbf; /* Color de acento para enfoque */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Brillo suave */
+}
+
+.filterMenu button {
+  display: block;
+  width: 100%; /* Botón ancho completo */
+  background-color: #007bff; /* Color de acento */
+  color: #fff; /* Texto blanco */
+  border: none;
+  border-radius: 8px; /* Bordes suaves */
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filterMenu button:hover {
+  background-color: #04adbf; /* Oscurecer en hover */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 1700px) {
   .recommendations {
     padding: 0px 250px 0px 250px;
@@ -295,6 +362,10 @@
 
   .products {
     padding: 0px 100px 0px 100px;
+  }
+
+  .filterMenu {
+    right: 11%;
   }
 }
 
