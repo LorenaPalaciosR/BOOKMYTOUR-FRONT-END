@@ -134,11 +134,12 @@ const Home = () => {
 
     const filtered = state.data
       .filter((tour) => {
+        console.log(tour)
         // Normaliza las propiedades del tour antes de compararlas
         const matchesText =
-          normalizeText(tour.nombre).includes(normalizedSearchText) ||
-          normalizeText(tour.descripcion).includes(normalizedSearchText) ||
-          normalizeText(tour.ubicacion).includes(normalizedSearchText);
+          normalizeText(tour.name).includes(normalizedSearchText) ||
+          normalizeText(tour.description).includes(normalizedSearchText) ||
+          normalizeText(tour.cityNames.join(" ")).includes(normalizedSearchText);
 
         // Filtrar por duracion (si se proporcionan)
         const matchesDates = (() => {
@@ -147,7 +148,7 @@ const Home = () => {
             return match ? parseInt(match[1], 10) : 0;
           };
 
-          const tourDays = extractDays(tour.duracion);
+          const tourDays = extractDays(tour.duration);
 
           return (
             (!minDays || tourDays >= parseInt(minDays, 10)) &&
@@ -258,12 +259,12 @@ const Home = () => {
                       setSearchText("");
                     }}
                     key={tour.id}
-                    to={`${window.location.origin}/detalle/${tour.id}`}
+                    to={`${window.location.origin}/detalle/${tour.tourId}`}
                   >
-                    <img src={tour.imagenes[0]} alt={tour.nombre} />
+                    <img src={tour.imagenes[0]} alt={tour.name} />
                     <div className={Styles.filteredTourInfo}>
-                      <h3 className={Styles.tourTitle}>{tour.nombre}</h3>
-                      <p className={Styles.resumen}>{tour.resumen}</p>
+                      <h3 className={Styles.tourTitle}>{tour.name}</h3>
+                      <p className={Styles.resumen}>{tour.summary}</p>
                     </div>
                   </Link>
                 ))}
