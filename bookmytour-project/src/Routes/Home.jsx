@@ -258,7 +258,7 @@ const Home = () => {
                       setFilteredTours([]);
                       setSearchText("");
                     }}
-                    key={tour.id}
+                    key={tour.tourId}
                     to={`${window.location.origin}/detalle/${tour.tourId}`}
                   >
                     <img src={tour.imagenes[0]} alt={tour.name} />
