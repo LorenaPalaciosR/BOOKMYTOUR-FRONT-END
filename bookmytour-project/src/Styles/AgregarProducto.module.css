@@ -1,0 +1,105 @@
+.mainContainer {
+  width: 100%;
+  height: 90dvh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 2rem 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+}
+
+.formInput label {
+  color: #464646;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.formInput input::placeholder {
+  color: #aaaaaa;
+  font-weight: 200;
+}
+
+select {
+  width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: #ffffff84;
+}
+
+.formContainer {
+  display: flex;
+  width: 100%;
+  gap: 60px;
+}
+
+.formulario1,
+.formulario2 {
+  width: 48%; 
+  display: flex;
+  flex-direction: column;
+}
+
+.formulario1 label,
+.formulario2 label {
+  display: block;  
+  margin-bottom: 5px; 
+}
+
+.formulario1 input,
+.formulario1 select,
+.formulario2 input,
+.formulario2 textarea {
+  width: 100%;  
+  margin-bottom: 15px;  
+}
+
+
+.botones {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+
+.button {
+  width: 200px;
+  height: 48px;
+  background-color: #04adbf;
+  color: #ffff;
+  border-color: #04adbf;
+  border-radius: 10px;
+}
+
+label {
+  color: #464646;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+textarea {
+  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: #ffffff84;
+  width: 100%;
+  padding: 10px;
+}
+
+textarea::placeholder {
+  color: #aaaaaa;
+  font-weight: 200;
+  font-family: "Manrope";
+}

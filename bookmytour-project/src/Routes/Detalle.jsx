@@ -18,7 +18,7 @@ const Detail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Filtrar el tour específico según el ID
-  const tour = state.data.find((tour) => tour.id === parseInt(id));
+  const tour = state.data.find((tour) => tour.tourId === parseInt(id));
 
   if (!tour) {
     return <div style={{ height: "100vh" }}>Tour no encontrado</div>; // Mensaje si el tour no se encuentra
@@ -70,8 +70,8 @@ const Detail = () => {
         <div className={Styles.mainImage}>
           <img src={tour.imagenes[0]} alt={tour.imagenes[0]} />
           <div className={Styles.littleCard}>
-            <h3>{tour.nombre}</h3>
-            <p>{tour.card}</p>
+            <h3>{tour.name}</h3>
+            <p>{tour.summary}</p>
             <button onClick={handleSchedule}>¡Agenda ahora!</button>
           </div>
         </div>
@@ -106,8 +106,8 @@ const Detail = () => {
                   marginTop: "30px",
                 }}
               >
-                <h4>{tour.nombre}</h4>
-                <h5 style={{ textAlign: "end" }}>$ {tour.precio}</h5>
+                <h4>{tour.name}</h4>
+                <h5 style={{ textAlign: "end" }}>$ {tour.costPerPerson}</h5>
               </div>
               <div
                 style={{
@@ -117,19 +117,21 @@ const Detail = () => {
                   marginBottom: "10px",
                 }}
               >
-                <span style={{ textAlign: "left" }}>{tour.ubicacion}</span>
-                <span style={{ textAlign: "end" }}>{tour.duracion}</span>
+                <span style={{ textAlign: "left" }}>
+                  {tour.cityNames.join(", ")}
+                </span>
+                <span style={{ textAlign: "end" }}>{tour.duration}</span>
               </div>
             </div>
             <div id={Styles.description}>
-              <p>{tour.descripcion}</p>
+              <p>{tour.description}</p>
             </div>
           </section>
           <Characteristics />
           <div style={{ padding: "0 15px" }}>
             <h4>Disponibilidad</h4>
             <p>
-              Este tour tiene una duración de {tour.duracion}, selecciona la
+              Este tour tiene una duración de {tour.duration}, selecciona la
               fecha inicial para verificar la disponibilidad
             </p>
           </div>
@@ -145,7 +147,7 @@ const Detail = () => {
             }}
           >
             <MyCalendar
-              duration={Number(tour.duracion.split(" ")[0])}
+              duration={Number(tour.duration.split(" ")[0])}
               customProps={{
                 inline: true,
               }}
@@ -169,7 +171,7 @@ const Detail = () => {
             }}
           >
             <h2 style={{ margin: "0" }}>Reservar tour</h2>
-            <p style={{ margin: "0" }}>{tour.nombre}</p>
+            <p style={{ margin: "0" }}>{tour.name}</p>
           </header>
           <div
             style={{
@@ -194,7 +196,7 @@ const Detail = () => {
               >
                 Fechas
               </label>
-              <MyCalendar duration={Number(tour.duracion.split(" ")[0])} />
+              <MyCalendar duration={Number(tour.duration.split(" ")[0])} />
             </div>
             <TextInput
               label="Huespedes"
