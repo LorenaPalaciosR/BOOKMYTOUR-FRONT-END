@@ -8,9 +8,14 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   const { state } = useContextGlobalStates();
-  const [city, setCity] = useState("");
   const [randomTours, setRandomTours] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
+  const [minDays, setMinDays] = useState("");
+  const [maxDays, setMaxDays] = useState("");
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [filteredTours, setFilteredTours] = useState([]);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 635);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(state.data.length / itemsPerPage);
 
@@ -62,6 +67,10 @@ const Home = () => {
     ],
   };
 
+  const toggleFilterMenu = () => {
+    setIsFilterMenuOpen((prev) => !prev);
+  };
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -94,13 +103,82 @@ const Home = () => {
     setRandomTours(filteredTours);
   }, [state.data]);
 
+  useEffect(() => {
+    // Detectar tamaño de la pantalla y ajustar la lógica de búsqueda
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 635); // Actualiza el estado dependiendo del tamaño de la ventana
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Filtrar los tours con base a los filtros aplicados
+  const filterTours = () => {
+    if (!searchText && !minDays && !maxDays) {
+      // Si no hay filtros activos, no aplicar ninguno y salir
+      setFilteredTours([]); 
+      return;
+    }
+
+    const normalizeText = (text) => {
+      return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, ""); // Elimina los diacríticos
+    };
+
+    const normalizedSearchText = normalizeText(searchText);
+
+    const filtered = state.data
+      .filter((tour) => {
+        // Normaliza las propiedades del tour antes de compararlas
+        const matchesText =
+          normalizeText(tour.nombre).includes(normalizedSearchText) ||
+          normalizeText(tour.descripcion).includes(normalizedSearchText) ||
+          normalizeText(tour.ubicacion).includes(normalizedSearchText);
+
+        // Filtrar por duracion (si se proporcionan)
+        const matchesDates = (() => {
+          const extractDays = (duration) => {
+            const match = duration.match(/(\d+)\s*días/);
+            return match ? parseInt(match[1], 10) : 0;
+          };
+
+          const tourDays = extractDays(tour.duracion);
+
+          return (
+            (!minDays || tourDays >= parseInt(minDays, 10)) &&
+            (!maxDays || tourDays <= parseInt(maxDays, 10))
+          );
+        })();
+
+        return matchesText && matchesDates;
+      })
+      .slice(0, 7); // Limitar a un máximo de 7 resultados
+
+    setFilteredTours(filtered);
+  };
+
+  useEffect(() => {
+    // Este es el caso cuando es móvil, el filtro se ejecuta al escribir
+    if (!isDesktop) {
+      filterTours();
+    }
+  }, [searchText, minDays, maxDays, state.data, isDesktop]);
+
   const handleChange = (e) => {
-    setCity(e.target.value);
+    setSearchText(e.target.value.toLowerCase());
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Buscar:", city);
+    if (isDesktop) {
+      // Si es desktop, ejecutar la búsqueda solo cuando se hace submit
+      filterTours();
+    }
   };
 
   const currentProducts = state.data.slice(
@@ -116,32 +194,82 @@ const Home = () => {
           src="/images/imagen-marca.png"
           alt="Main-Image"
         />
-        <form id={Styles.container} onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={city}
-            onChange={handleChange}
-            placeholder="Ingresa la ciudad o región"
-            id={Styles.input}
-          />
-          <button
-            id={Styles.btnSubmit}
-            className={Styles.btnsForm}
-            type="submit"
-          >
-            Buscar
-          </button>
-          <button
-            type="button"
-            id={Styles.btnFilter}
-            className={Styles.btnsForm}
-          >
-            <img
-              id={Styles.filterIcon}
-              src="/images/filterIcon.svg"
-              alt="Filter-Icon"
+        <form onSubmit={handleSubmit}>
+          <div id={Styles.container}>
+            <input
+              type="text"
+              value={searchText}
+              onChange={handleChange}
+              placeholder="Busca tours o destinos..."
+              title="Encuentra tours adaptados a tus intereses, fechas y destinos. Explora experiencias únicas."
+              id={Styles.input}
             />
-          </button>
+            <button
+              id={Styles.btnSubmit}
+              className={Styles.btnsForm}
+              type="submit"
+              onClick={() => setIsFilterMenuOpen(false)}
+            >
+              Buscar
+            </button>
+            <button
+              type="button"
+              id={Styles.btnFilter}
+              className={Styles.btnsForm}
+              onClick={toggleFilterMenu}
+            >
+              <img
+                id={Styles.filterIcon}
+                src="/images/filterIcon.svg"
+                alt="Filter-Icon"
+              />
+            </button>
+
+            {/* Menú desplegable */}
+            {isFilterMenuOpen && (
+              <div className={Styles.filterMenu}>
+                <label htmlFor="minDays">Mínimo de días:</label>
+                <input
+                  type="number"
+                  id="minDays"
+                  value={minDays}
+                  onChange={(e) => setMinDays(e.target.value)}
+                  placeholder="Ej: 3"
+                />
+
+                <label htmlFor="maxDays">Máximo de días:</label>
+                <input
+                  type="number"
+                  id="maxDays"
+                  value={maxDays}
+                  onChange={(e) => setMaxDays(e.target.value)}
+                  placeholder="Ej: 7"
+                />
+              </div>
+            )}
+
+            {filteredTours.length > 0 && (
+              <ul id={Styles.suggestions}>
+                {filteredTours.map((tour) => (
+                  <Link
+                    className={Styles.filteredTourItem}
+                    onClick={() => {
+                      setFilteredTours([]);
+                      setSearchText("");
+                    }}
+                    key={tour.id}
+                    to={`${window.location.origin}/detalle/${tour.id}`}
+                  >
+                    <img src={tour.imagenes[0]} alt={tour.nombre} />
+                    <div className={Styles.filteredTourInfo}>
+                      <h3 className={Styles.tourTitle}>{tour.nombre}</h3>
+                      <p className={Styles.resumen}>{tour.resumen}</p>
+                    </div>
+                  </Link>
+                ))}
+              </ul>
+            )}
+          </div>
         </form>
       </div>
       <div className={Styles.sectionContainer}>
