@@ -134,7 +134,6 @@ const Home = () => {
 
     const filtered = state.data
       .filter((tour) => {
-        console.log(tour)
         // Normaliza las propiedades del tour antes de compararlas
         const matchesText =
           normalizeText(tour.name).includes(normalizedSearchText) ||
