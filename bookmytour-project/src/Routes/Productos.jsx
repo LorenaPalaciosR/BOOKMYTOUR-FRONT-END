@@ -5,7 +5,8 @@ import { useContextGlobalStates } from "../Components/utils/global.context";
 import { routes } from "../Components/utils/routes";
 import { useTours } from "../hooks/useTours";
 import { toast, ToastContainer } from "react-toastify";
-
+import { useEffect } from "react";
+//import { tourService } from "../services/api/tourService";
 const Productos = () => {
   const { state } = useContextGlobalStates();
   const navigate = useNavigate();
@@ -14,11 +15,14 @@ const Productos = () => {
   const totalPages = Math.ceil(state.data.length / itemsPerPage);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const { deleteTour } = useTours();
+  const { tours,deleteTour, fetchTours } = useTours();
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+  useEffect(() => {
+    fetchTours(); // Cargar tours al montar el componente
+  }, [fetchTours]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -39,6 +43,7 @@ const Productos = () => {
         toast.success("Producto eliminado exitosamente!", {
           position: "top-center",
         });
+        fetchTours();
       }
     } catch (err) {
       console.error("Error al eliminar el producto:", err);
@@ -47,7 +52,7 @@ const Productos = () => {
   };
 
   const getFilteredAndSortedData = () => {
-    let filteredData = state.data;
+    let filteredData = [...tours];
 
     // Filtrar por término de búsqueda
     if (searchTerm) {

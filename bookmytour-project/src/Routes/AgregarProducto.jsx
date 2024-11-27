@@ -21,7 +21,7 @@ const AgregarProducto = () => {
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
-  const { createTour } = useTours();
+  const { createTour , fetchTours} = useTours();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -61,7 +61,7 @@ const AgregarProducto = () => {
     try {
       const newTour = await createTour(formDataToSend);
 
-      if (newTour.token) {
+      if (newTour) {
         toast.success("Producto creado exitosamente!", {
           position: "top-center",
         });
@@ -70,10 +70,19 @@ const AgregarProducto = () => {
         setTimeout(() => {
           navigate("/productos");
         }, 1000);
+        await fetchTours(); // Vuelve a obtener todos los tours
+      setTimeout(() => navigate("/productos"), 1000);
       }
     } catch (err) {
-      console.error("Error al crear el producto:", err);
-      toast.error("Hubo un error al crear el producto");
+      if (err.response && err.response.status === 409){
+        toast.error("El nombre del tour ya esta en la base de datos",{
+          position: "top-center",
+        });
+      }else {
+        console.error("Error al crear el producto:", err);
+        toast.error("Hubo un error al crear el producto");
+      }
+     
     }
   };
 

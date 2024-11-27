@@ -66,7 +66,7 @@ const EditarProducto = () => {
 
     try {
       const updatedTour = await updateTour(id, formDataToSend);
-
+console.log("respuesta", updateTour)
       if (updatedTour.success) {
         toast.success("Producto actualizado exitosamente!", {
           position: "top-center",

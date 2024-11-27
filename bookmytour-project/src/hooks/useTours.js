@@ -41,6 +41,7 @@ export const useTours = () => {
     setError(null);
     try {
       const response = await tourService.updateTour(id, tourData);
+      console.log("que enbvio",response)
       setTours((prev) =>
         prev.map((tour) => (tour.tourId === id ? response.data : tour))
       );
@@ -56,7 +57,7 @@ export const useTours = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchTours]);
 
   const deleteTour = useCallback(async (id) => {
     setLoading(true);
