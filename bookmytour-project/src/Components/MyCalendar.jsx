@@ -1,96 +1,77 @@
-import React, { useState, forwardRef } from "react";
+import { useState } from "react";
 import DatePicker from "react-datepicker";
-import Styles from "../Styles/Form.module.css";
+import CustomCalendarInput from "./CustomCalendarInput";
+import { validateRange, calculateEndDate } from "./utils/calendar";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-// eslint-disable-next-line react/display-name
-const CustomInput = forwardRef(({ value, onClick }, ref) => (
-  <div className={Styles.inputContainer}>
-    <input
-      type="text"
-      value={value}
-      onClick={onClick}
-      className={Styles.formInput}
-      ref={ref}
-    />
-  </div>
-));
-
-const MyCalendar = () => {
-  const [startDate, setStartDate] = useState(new Date());
+const MyCalendar = ({ customProps, duration }) => {
+  const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const excludedDates = [new Date()];
+  const [error, setError] = useState(null);
+
+  const excludedDates = [new Date(2024, 11, 4), new Date(2024, 11, 21)];
 
   const onChange = (dates) => {
     const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-  };
 
+    setError(null);
+
+    if (start) {
+      if (duration) {
+        const calculatedEndDate = calculateEndDate(start, duration);
+
+        const rangeError = validateRange(
+          start,
+          calculatedEndDate,
+          excludedDates
+        );
+        if (rangeError) {
+          setError(rangeError);
+          setStartDate(null);
+          setEndDate(null);
+          return;
+        }
+
+        setStartDate(start);
+        setEndDate(calculatedEndDate);
+        return;
+      }
+
+      if (end) {
+        const rangeError = validateRange(start, end, excludedDates);
+        if (rangeError) {
+          setError(rangeError);
+          setStartDate(null);
+          setEndDate(null);
+          return;
+        }
+
+        setStartDate(start);
+        setEndDate(end);
+      } else {
+        setStartDate(start);
+        setEndDate(null);
+      }
+    }
+  };
   return (
-    <DatePicker
-      startDate={startDate}
-      endDate={endDate}
-      showIcon
-      selected={startDate}
-      selectsRange
-      onChange={onChange}
-      monthsShown={2}
-      minDate={new Date()}
-      isClearable={true}
-      placeholderText="Select a date"
-      excludeDates={excludedDates}
-      icon={<img src="/icons/calendar.svg" alt="Calendar Icon" />}
-      customInput={<CustomInput />}
-      renderCustomHeader={({
-        monthDate,
-        customHeaderCount,
-        decreaseMonth,
-        increaseMonth,
-      }) => (
-        <div>
-          <button
-            aria-label="Previous Month"
-            className={
-              "react-datepicker__navigation react-datepicker__navigation--previous"
-            }
-            style={customHeaderCount === 1 ? { visibility: "hidden" } : null}
-            onClick={decreaseMonth}
-          >
-            <span
-              className={
-                "react-datepicker__navigation-icon react-datepicker__navigation-icon--previous"
-              }
-            >
-              {"<"}
-            </span>
-          </button>
-          <span className="react-datepicker__current-month">
-            {monthDate.toLocaleString("en-US", {
-              month: "long",
-              year: "numeric",
-            })}
-          </span>
-          <button
-            aria-label="Next Month"
-            className={
-              "react-datepicker__navigation react-datepicker__navigation--next"
-            }
-            style={customHeaderCount === 0 ? { visibility: "hidden" } : null}
-            onClick={increaseMonth}
-          >
-            <span
-              className={
-                "react-datepicker__navigation-icon react-datepicker__navigation-icon--next"
-              }
-            >
-              {">"}
-            </span>
-          </button>
-        </div>
-      )}
-    />
+    <>
+      <DatePicker
+        {...customProps}
+        startDate={startDate}
+        endDate={endDate}
+        selectsRange
+        showIcon
+        onChange={onChange}
+        monthsShown={2}
+        minDate={new Date()}
+        excludeDates={excludedDates}
+        placeholderText="Selecciona una fecha"
+        customInput={<CustomCalendarInput />}
+      />
+      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+    </>
   );
 };
 

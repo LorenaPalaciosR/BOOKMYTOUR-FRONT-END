@@ -56,7 +56,7 @@ const Home = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          arrows: false
+          arrows: false,
         },
       },
     ],
@@ -89,7 +89,7 @@ const Home = () => {
   useEffect(() => {
     const selectedIds = getRandomIds(4);
     const filteredTours = state.data.filter((tour) =>
-      selectedIds.includes(tour.id)
+      selectedIds.includes(tour.tourId)
     );
     setRandomTours(filteredTours);
   }, [state.data]);
@@ -191,12 +191,12 @@ const Home = () => {
         <div className={Styles.cardsContainer}>
           {currentProducts.map((item) => (
             <Card
-              id={item.id}
-              key={item.id}
-              title={item.nombre}
+              id={item.tourId}
+              key={item.tourId}
+              title={item.name}
               img={item.imagenes[0]}
-              price={item.precio}
-              description={item.resumen}
+              price={item.costPerPerson}
+              description={item.summary}
             />
           ))}
         </div>
@@ -238,12 +238,12 @@ const Home = () => {
         <div className={Styles.cardsContainer}>
           {randomTours.map((tour) => (
             <Card
-              id={tour.id}
-              key={tour.id}
-              title={tour.nombre}
+              id={tour.tourId}
+              key={tour.tourId}
+              title={tour.name}
               img={tour.imagenes[0]}
-              price={tour.precio}
-              description={tour.resumen}
+              price={tour.costPerPerson}
+              description={tour.summary}
             />
           ))}
         </div>

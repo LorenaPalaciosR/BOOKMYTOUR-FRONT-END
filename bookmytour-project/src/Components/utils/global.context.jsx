@@ -27,17 +27,16 @@ export const ContextProvider = ({ children }) => {
     if (user) {
       dispatch({
         type: "SET_USER",
-        payload: JSON.parse(user), 
+        payload: JSON.parse(user),
       });
     }
 
     async function fetchData() {
-      const response = await fetch(
-        "https://bookmytourjson.s3.us-east-1.amazonaws.com/tours.json"
-      );
+      const response = await fetch("http://34.239.141.92:8080/api/tours");
       const data = await response.json();
       dispatch({ type: "GET_TOURS", payload: data });
     }
+
     fetchData();
     async function fetchCategories() {
       const response = await fetch(
