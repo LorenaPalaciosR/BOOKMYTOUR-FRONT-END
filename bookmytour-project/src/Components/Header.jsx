@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Styles from "../Styles/Header.module.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContextGlobalStates } from "../Components/utils/global.context.jsx";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import { routes } from "./utils/routes";
 import { useAuth } from "../hooks/useAuth.js";
 
@@ -11,11 +11,28 @@ const Header = () => {
   const [isMenuOpenDesktop, setIsMenuOpenDesktop] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogged, setIsLogged] = useState(!!state.user);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAuth();
 
   // Obtener la ubicación actual usando useLocation
   const location = useLocation();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    const usuario = JSON.parse(user);
+    // Verificar si el usuario es vacío o no tiene el rol correcto
+    if (
+      !usuario ||
+      !usuario.usuario ||
+      usuario.usuario.rol.rolName !== "ADMIN"
+    ) {
+      setIsAdmin(false);
+    } else {
+      setIsAdmin(true);
+    }
+  }, [navigate]);
 
   const toggleMenuDesktop = () => {
     setIsMenuOpenDesktop((prevState) => !prevState);
@@ -42,17 +59,17 @@ const Header = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Cerrar sesión",
-      cancelButtonText: "Cancelar"
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        logout(); 
+        logout();
         dispatch({ type: "LOG_OUT" });
         closeMenuDesktop();
         closeMenu();
         Swal.fire({
           title: "¡Sesión cerrada!",
           text: "Has cerrado sesión con éxito.",
-          icon: "success"
+          icon: "success",
         });
         navigate("/");
       } else {
@@ -66,7 +83,6 @@ const Header = () => {
     // Actualiza el valor de isLogged cada vez que state.user cambie
     setIsLogged(!!state.user);
   }, [state.user]);
-
 
   useEffect(() => {
     // Función para cerrar el menú móvil al cambiar a vista de escritorio
@@ -151,15 +167,19 @@ const Header = () => {
                     <hr />
                     <p style={{ fontWeight: "bold" }}>Menú</p>
                     <hr />
-                    <Link to="/productos" onClick={closeMenuDesktop}>
-                      Listar productos
-                    </Link>
-                    <Link to="/usuarios" onClick={closeMenuDesktop}>
-                      Listar usuarios
-                    </Link>
-                    <Link to="" onClick={closeMenuDesktop}>
-                      Listar reservas
-                    </Link>
+                    {isAdmin && (
+                      <>
+                        <Link to="/productos" onClick={closeMenuDesktop}>
+                          Listar productos
+                        </Link>
+                        <Link to="/usuarios" onClick={closeMenuDesktop}>
+                          Listar usuarios
+                        </Link>
+                        <Link to="" onClick={closeMenuDesktop}>
+                          Listar reservas
+                        </Link>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -255,15 +275,19 @@ const Header = () => {
                 >
                   Cerrar sesión
                 </span>
-                <Link to="/productos" onClick={closeMenu}>
-                  Listar productos
-                </Link>
-                <Link to="/usuarios" onClick={closeMenu}>
-                  Listar usuarios
-                </Link>
-                <Link to="" onClick={closeMenu}>
-                  Listar reservas
-                </Link>
+                {isAdmin && (
+                  <>
+                    <Link to="/productos" onClick={closeMenu}>
+                      Listar productos
+                    </Link>
+                    <Link to="/usuarios" onClick={closeMenu}>
+                      Listar usuarios
+                    </Link>
+                    <Link to="" onClick={closeMenu}>
+                      Listar reservas
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           ) : (
