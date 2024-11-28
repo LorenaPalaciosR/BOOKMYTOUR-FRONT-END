@@ -1,6 +1,6 @@
 import { useTours } from "../hooks/useTours";
 import Styles from "../Styles/AgregarProducto.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import TextInput from "../Components/TextInput";
@@ -11,7 +11,6 @@ const EditarProducto = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const { state } = useContextGlobalStates();
-
   const { updateTour } = useTours();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -29,6 +28,25 @@ const EditarProducto = () => {
     itinerario: tour.itinerary,
     imagen: tour.imagenes,
   });
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      // Si no hay un usuario en localStorage, redirige al home
+      navigate("/");
+    } else {
+      const usuario = JSON.parse(user);
+      // Verificar si el usuario es vacío o no tiene el rol correcto
+      if (
+        !usuario ||
+        !usuario.usuario ||
+        usuario.usuario.rol.rolName !== "ADMIN"
+      ) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -66,8 +84,9 @@ const EditarProducto = () => {
 
     try {
       const updatedTour = await updateTour(id, formDataToSend);
-console.log("respuesta", updateTour)
-      if (updatedTour.success) {
+      console.log("respuesta", updatedTour);
+
+      if (updatedTour.message === "Tour actualizado con éxito") {
         toast.success("Producto actualizado exitosamente!", {
           position: "top-center",
         });

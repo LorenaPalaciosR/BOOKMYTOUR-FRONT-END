@@ -1,6 +1,6 @@
 import { useTours } from "../hooks/useTours";
 import Styles from "../Styles/AgregarProducto.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import TextInput from "../Components/TextInput";
@@ -23,6 +23,25 @@ const AgregarProducto = () => {
   const [previewUrls, setPreviewUrls] = useState([]);
   const { createTour , fetchTours} = useTours();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      // Si no hay un usuario en localStorage, redirige al home
+      navigate("/");
+    } else {
+      const usuario = JSON.parse(user);
+      // Verificar si el usuario es vacío o no tiene el rol correcto
+      if (
+        !usuario ||
+        !usuario.usuario ||
+        usuario.usuario.rol.rolName !== "ADMIN"
+      ) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;

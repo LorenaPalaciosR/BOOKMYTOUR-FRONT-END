@@ -17,6 +17,25 @@ const Productos = () => {
   const [sortOrder, setSortOrder] = useState("");
   const { tours,deleteTour, fetchTours } = useTours();
 
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      // Si no hay un usuario en localStorage, redirige al home
+      navigate("/");
+    } else {
+      const usuario = JSON.parse(user);
+      // Verificar si el usuario es vacío o no tiene el rol correcto
+      if (
+        !usuario ||
+        !usuario.usuario ||
+        usuario.usuario.rol.rolName !== "ADMIN"
+      ) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
