@@ -54,7 +54,7 @@ const EditarProducto = () => {
     formDataToSend.append("categoryName", formData.categoria);
     formDataToSend.append("costPerPerson", formData.costo);
     formDataToSend.append("datesAvailable", formData.disponibilidad);
-    formDataToSend.append("city", formData.ciudad);
+    formDataToSend.append("cityNames", formData.ciudad);
     formDataToSend.append("duration", formData.duracion);
     formDataToSend.append("summary", formData.resumen);
     formDataToSend.append("description", formData.descripcion);
@@ -66,23 +66,34 @@ const EditarProducto = () => {
 
     try {
       const updatedTour = await updateTour(id, formDataToSend);
-console.log("respuesta", updateTour)
+      console.log("respuesta", updatedTour);
+
       if (updatedTour.success) {
         toast.success("Producto actualizado exitosamente!", {
           position: "top-center",
         });
+
+        if (updatedTour.details && typeof updatedTour.details === "object") {
+          Object.entries(updatedTour.details).forEach(([key, value]) => {
+            toast.info(`${key}: ${value}`, { position: "top-center" });
+          });
+        }
+
         previewUrls.forEach((url) => URL.revokeObjectURL(url));
         setPreviewUrls([]);
         setTimeout(() => {
           navigate("/productos");
         }, 1000);
+      } else {
+        toast.error(updatedTour.message, { position: "top-center" });
       }
     } catch (err) {
       console.error("Error al actualizar el producto:", err);
-      toast.error("Hubo un error al actualizar el producto");
+      toast.error("Hubo un error al actualizar el producto", {
+        position: "top-center",
+      });
     }
   };
-
   return (
     <div className={Styles.mainContainer}>
       <ToastContainer position="top-center" />

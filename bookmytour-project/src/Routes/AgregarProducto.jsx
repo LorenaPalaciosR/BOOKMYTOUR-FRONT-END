@@ -12,7 +12,7 @@ const AgregarProducto = () => {
     categoria: "",
     costo: "",
     disponibilidad: "",
-    ciudad: "",
+    ciudad: [],
     duracion: "",
     imagen: [],
     resumen: "",
@@ -48,7 +48,7 @@ const AgregarProducto = () => {
     formDataToSend.append("categoryName", formData.categoria);
     formDataToSend.append("costPerPerson", formData.costo);
     formDataToSend.append("datesAvailable", formData.disponibilidad);
-    formDataToSend.append("city", formData.ciudad);
+    formDataToSend.append("cityNames", formData.ciudad);
     formDataToSend.append("duration", formData.duracion);
     formDataToSend.append("summary", formData.resumen);
     formDataToSend.append("description", formData.descripcion);
