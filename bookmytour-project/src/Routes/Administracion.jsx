@@ -1,9 +1,31 @@
 //import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Styles from '../Styles/Administration.module.css'
 import { routes } from '../Components/utils/routes'
+import { useEffect } from 'react';
 
 const Administracion = () => {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      // Si no hay un usuario en localStorage, redirige al home
+      navigate("/");
+    } else {
+      const usuario = JSON.parse(user);
+      // Verificar si el usuario es vacío o no tiene el rol correcto
+      if (
+        !usuario ||
+        !usuario.usuario ||
+        usuario.usuario.rol.rolName !== "ADMIN"
+      ) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
+
   return (
     <>
     <div className={Styles.admin}>

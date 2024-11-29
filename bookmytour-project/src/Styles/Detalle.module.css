@@ -89,6 +89,7 @@
     height: auto;
     display: block;
     border-radius: 20px;
+    max-height: 410px;
 }
 
 .tourInfo h4, .tourInfo h5 {
