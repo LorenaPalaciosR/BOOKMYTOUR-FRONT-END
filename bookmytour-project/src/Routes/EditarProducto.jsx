@@ -13,6 +13,7 @@ const EditarProducto = () => {
   const { state } = useContextGlobalStates();
   const { updateTour } = useTours();
   const navigate = useNavigate();
+  const [cities, setCities] = useState([]);
   const { id } = useParams();
 
   const tour = state.data.find((tour) => tour.tourId === parseInt(id));
@@ -48,8 +49,18 @@ const EditarProducto = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    async function fetchCities() {
+      const response = await fetch("http://34.239.141.92:8080/api/cities");
+      const data = await response.json();
+      setCities(data);
+    }
+    fetchCities();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
+    console.log(name, value)
     setFormData({
       ...formData,
       [name]: type === "file" ? files[0] : value,
@@ -72,7 +83,7 @@ const EditarProducto = () => {
     formDataToSend.append("categoryName", formData.categoria);
     formDataToSend.append("costPerPerson", formData.costo);
     formDataToSend.append("datesAvailable", formData.disponibilidad);
-    formDataToSend.append("city", formData.ciudad);
+    formDataToSend.append("cityNames", formData.ciudad);
     formDataToSend.append("duration", formData.duracion);
     formDataToSend.append("summary", formData.resumen);
     formDataToSend.append("description", formData.descripcion);
@@ -149,15 +160,26 @@ const EditarProducto = () => {
                 onChange={handleChange}
                 customClass={Styles.formInput}
               />
-              <TextInput
-                label="Ciudad"
-                placeholder="Ingresa la ciudad del tour"
-                type="text"
-                name="ciudad"
-                value={formData.ciudad}
-                onChange={handleChange}
-                customClass={Styles.formInput}
-              />
+
+              <div>
+                <label htmlFor="select">Ciudades:</label>
+                <select
+                  id="selectCities"
+                  name="ciudad"
+                  onChange={handleChange}
+                  value={formData.ciudad}
+                >
+                  <option value="" disabled>
+                    Selecciona las ciudades
+                  </option>
+                  {cities.map((city) => (
+                    <option key={city.cityId} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <TextInput
                 label="Duración"
                 placeholder="Ingresa la duración del tour, por ejemplo: 3 dias 4 noches"

@@ -21,7 +21,9 @@ const AgregarProducto = () => {
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
-  const { createTour , fetchTours} = useTours();
+  const [cities, setCities] = useState([]);
+
+  const { createTour, fetchTours } = useTours();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,8 +45,18 @@ const AgregarProducto = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    async function fetchCities() {
+      const response = await fetch("http://34.239.141.92:8080/api/cities");
+      const data = await response.json();
+      setCities(data);
+    }
+    fetchCities();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
+
     setFormData({
       ...formData,
       [name]: type === "file" ? files[0] : value,
@@ -67,7 +79,7 @@ const AgregarProducto = () => {
     formDataToSend.append("categoryName", formData.categoria);
     formDataToSend.append("costPerPerson", formData.costo);
     formDataToSend.append("datesAvailable", formData.disponibilidad);
-    formDataToSend.append("city", formData.ciudad);
+    formDataToSend.append("cityNames", formData.ciudad);
     formDataToSend.append("duration", formData.duracion);
     formDataToSend.append("summary", formData.resumen);
     formDataToSend.append("description", formData.descripcion);
@@ -90,18 +102,17 @@ const AgregarProducto = () => {
           navigate("/productos");
         }, 1000);
         await fetchTours(); // Vuelve a obtener todos los tours
-      setTimeout(() => navigate("/productos"), 1000);
+        setTimeout(() => navigate("/productos"), 1000);
       }
     } catch (err) {
-      if (err.response && err.response.status === 409){
-        toast.error("El nombre del tour ya esta en la base de datos",{
+      if (err.response && err.response.status === 409) {
+        toast.error("El nombre del tour ya esta en la base de datos", {
           position: "top-center",
         });
-      }else {
+      } else {
         console.error("Error al crear el producto:", err);
         toast.error("Hubo un error al crear el producto");
       }
-     
     }
   };
 
@@ -147,15 +158,26 @@ const AgregarProducto = () => {
                 onChange={handleChange}
                 customClass={Styles.formInput}
               />
-              <TextInput
-                label="Ciudad"
-                placeholder="Ingresa la ciudad del tour"
-                type="text"
-                name="ciudad"
-                value={formData.ciudad}
-                onChange={handleChange}
-                customClass={Styles.formInput}
-              />
+
+              <div>
+                <label htmlFor="select">Ciudades:</label>
+                <select
+                  id="selectCities"
+                  name="ciudad"
+                  onChange={handleChange}
+                  value={formData.ciudad}
+                >
+                  <option value="" disabled selected>
+                    Selecciona las ciudades
+                  </option>
+                  {cities.map((city) => (
+                    <option key={city.cityId} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <TextInput
                 label="Duración"
                 placeholder="Ingresa la duración del tour, por ejemplo: 3 dias 4 noches"
