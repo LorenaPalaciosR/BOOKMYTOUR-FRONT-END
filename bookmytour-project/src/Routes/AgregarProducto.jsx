@@ -164,7 +164,15 @@ const AgregarProducto = () => {
                 <select
                   id="selectCities"
                   name="ciudad"
-                  onChange={handleChange}
+                  multiple
+                  onChange={(e) => {
+                    const options = Array.from(e.target.selectedOptions);
+                    const selectedValues = options.map((option) => option.value);
+                    setFormData((prevState) => ({
+                      ...prevState,
+                      ciudad: selectedValues,
+                    }));
+                  }}
                   value={formData.ciudad}
                 >
                   <option value="" disabled selected>

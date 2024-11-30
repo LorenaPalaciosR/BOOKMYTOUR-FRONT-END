@@ -22,7 +22,7 @@ const EditarProducto = () => {
     nombre: tour.name,
     categoria: tour.categoryName,
     costo: tour.costPerPerson,
-    ciudad: tour.cityNames.join(", "),
+    ciudad: tour.cityNames || [],
     duracion: tour.duration,
     resumen: tour.summary,
     descripcion: tour.description,
@@ -60,7 +60,7 @@ const EditarProducto = () => {
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    console.log(name, value)
+    console.log(name, value);
     setFormData({
       ...formData,
       [name]: type === "file" ? files[0] : value,
@@ -166,8 +166,21 @@ const EditarProducto = () => {
                 <select
                   id="selectCities"
                   name="ciudad"
-                  onChange={handleChange}
-                  value={formData.ciudad}
+                  multiple
+                  onChange={(e) => {
+                    // Obtener las opciones seleccionadas
+                    const options = Array.from(e.target.selectedOptions);
+                    const selectedValues = options.map(
+                      (option) => option.value
+                    );
+
+                    // Reemplazar las ciudades anteriores por las nuevas seleccionadas
+                    setFormData({
+                      ...formData, // Mantener el resto del estado sin cambios
+                      ciudad: selectedValues, // Solo actualizar las ciudades
+                    });
+                  }}
+                  value={formData.ciudad} // El estado actualizado de ciudades seleccionadas
                 >
                   <option value="" disabled>
                     Selecciona las ciudades
