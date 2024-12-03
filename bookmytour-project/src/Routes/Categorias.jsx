@@ -35,7 +35,7 @@ const Categorias = () => {
   let filteredData = state.data.filter((tour) => {
     const isInCategory = tour.categoryName === nombre;
     const matchesFilter = filter
-      ? tour.nombre.toLowerCase().includes(filter.toLowerCase())
+      ? tour.name.toLowerCase().includes(filter.toLowerCase())
       : true;
     return isInCategory && matchesFilter;
   });
@@ -43,11 +43,11 @@ const Categorias = () => {
   // Ordenar los datos filtrados si se ha seleccionado un orden
   if (sortOrder === "asc") {
     filteredData = filteredData.sort((a, b) =>
-      a.nombre.localeCompare(b.nombre)
+      a.name.localeCompare(b.name)
     );
   } else if (sortOrder === "desc") {
     filteredData = filteredData.sort((a, b) =>
-      b.nombre.localeCompare(a.nombre)
+      b.name.localeCompare(a.name)
     );
   }
 
