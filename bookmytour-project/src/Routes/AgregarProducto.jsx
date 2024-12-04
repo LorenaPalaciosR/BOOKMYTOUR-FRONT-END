@@ -47,7 +47,7 @@ const AgregarProducto = () => {
 
   useEffect(() => {
     async function fetchCities() {
-      const response = await fetch("http://34.239.141.92:8080/api/cities");
+      const response = await fetch("https://bookmytourweb.online/api/cities");
       const data = await response.json();
       setCities(data);
     }
@@ -167,7 +167,9 @@ const AgregarProducto = () => {
                   multiple
                   onChange={(e) => {
                     const options = Array.from(e.target.selectedOptions);
-                    const selectedValues = options.map((option) => option.value);
+                    const selectedValues = options.map(
+                      (option) => option.value
+                    );
                     setFormData((prevState) => ({
                       ...prevState,
                       ciudad: selectedValues,

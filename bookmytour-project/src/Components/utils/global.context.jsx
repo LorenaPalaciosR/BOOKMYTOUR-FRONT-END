@@ -32,7 +32,7 @@ export const ContextProvider = ({ children }) => {
     }
 
     async function fetchData() {
-      const response = await fetch("http://34.239.141.92:8080/api/tours");
+      const response = await fetch("https://bookmytourweb.online/api/tours");
       const data = await response.json();
       dispatch({ type: "GET_TOURS", payload: data });
     }
