@@ -12,6 +12,7 @@ import Login from "./Routes/Login";
 import ListaUsuarios from "./Routes/ListaUsuarios";
 import AgregarProducto from "./Routes/AgregarProducto";
 import EditarProducto from "./Routes/EditarProducto";
+import ReservarProducto from "./Routes/ReservarProducto";
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
           <Route path={routes.listaUsuarios} element={<ListaUsuarios />} />
           <Route path={routes.agregarProducto} element={<AgregarProducto />} />
           <Route path={routes.editarProducto} element={<EditarProducto />} />
+          <Route
+            path={routes.reservarProducto}
+            element={<ReservarProducto />}
+          />
           <Route
             path={routes.notFound}
             element={

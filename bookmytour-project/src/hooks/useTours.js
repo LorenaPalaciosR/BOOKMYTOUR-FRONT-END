@@ -36,28 +36,31 @@ export const useTours = () => {
     }
   }, []);
 
-  const updateTour = useCallback(async (id, tourData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await tourService.updateTour(id, tourData);
-      console.log("que enbvio",response)
-      setTours((prev) =>
-        prev.map((tour) => (tour.tourId === id ? response.data : tour))
-      );
+  const updateTour = useCallback(
+    async (id, tourData) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await tourService.updateTour(id, tourData);
+        console.log("que enbvio", response);
+        setTours((prev) =>
+          prev.map((tour) => (tour.tourId === id ? response.data : tour))
+        );
 
-      setTimeout(() => {
-        fetchTours();
-      }, 1000);
+        setTimeout(() => {
+          fetchTours();
+        }, 1000);
 
-      return response.data;
-    } catch (err) {
-      setError(err.response?.data?.message || "Error al actualizar el tour");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchTours]);
+        return response.data;
+      } catch (err) {
+        setError(err.response?.data?.message || "Error al actualizar el tour");
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchTours]
+  );
 
   const deleteTour = useCallback(async (id) => {
     setLoading(true);
@@ -74,6 +77,20 @@ export const useTours = () => {
     }
   }, []);
 
+  const getTourById = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await tourService.getTourById(id);
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.message || "Error al obtener el tour");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     tours,
     loading,
@@ -82,5 +99,6 @@ export const useTours = () => {
     createTour,
     updateTour,
     deleteTour,
+    getTourById,
   };
 };

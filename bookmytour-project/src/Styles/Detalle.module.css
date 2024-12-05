@@ -198,6 +198,100 @@
     font-weight: 200;
 }
 
+
+.cartSummary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.cartSummary p {
+    font-weight: bold;
+    padding: 5px;
+    margin: 0;
+}
+
+.cartSummary span {
+    padding: 0;
+    margin: 0;
+}
+
+.reservationContainer {
+    padding: 20px;
+  }
+  
+  .pageHeader {
+    color: #464646;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .pageHeader h2 {
+    margin: 0;
+  }
+  
+  .pageHeader p {
+    margin: 0;
+  }
+  
+  .reservationContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 2rem 10rem;
+  }
+  
+  .formColumn {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px 0;
+    gap: 10px;
+  }
+  
+  .formSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .dateContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .paymentMethodContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .imagePreviewContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 6rem;
+  }
+  
+  .previewImage {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  
+
 @media (max-width: 1700px) {
     .mainImage {
         height: 93%;
