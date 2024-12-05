@@ -11,6 +11,8 @@ const Home = () => {
   const [randomTours, setRandomTours] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
+  const [tempMinDays, setTempMinDays] = useState("");
+  const [tempMaxDays, setTempMaxDays] = useState("");
   const [minDays, setMinDays] = useState("");
   const [maxDays, setMaxDays] = useState("");
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
@@ -67,8 +69,20 @@ const Home = () => {
     ],
   };
 
-  const toggleFilterMenu = () => {
-    setIsFilterMenuOpen((prev) => !prev);
+  const applyFilters = () => {
+    setMinDays(tempMinDays);
+    setMaxDays(tempMaxDays);
+    setIsFilterMenuOpen(false);
+  };
+
+  const closeFilterMenu = () => {
+    setIsFilterMenuOpen(false); // Cierra el menú sin borrar valores temporales
+  };
+
+  const openFilterMenu = () => {
+    setTempMinDays(minDays); // Sincroniza los valores actuales al abrir
+    setTempMaxDays(maxDays); // Sincroniza los valores actuales al abrir
+    setIsFilterMenuOpen(true); // Abre el menú
   };
 
   const handlePageChange = (pageNumber) => {
@@ -119,7 +133,7 @@ const Home = () => {
   const filterTours = () => {
     if (!searchText && !minDays && !maxDays) {
       // Si no hay filtros activos, no aplicar ninguno y salir
-      setFilteredTours([]); 
+      setFilteredTours([]);
       return;
     }
 
@@ -138,7 +152,9 @@ const Home = () => {
         const matchesText =
           normalizeText(tour.name).includes(normalizedSearchText) ||
           normalizeText(tour.description).includes(normalizedSearchText) ||
-          normalizeText(tour.cityNames.join(" ")).includes(normalizedSearchText);
+          normalizeText(tour.cityNames.join(" ")).includes(
+            normalizedSearchText
+          );
 
         // Filtrar por duracion (si se proporcionan)
         const matchesDates = (() => {
@@ -216,7 +232,7 @@ const Home = () => {
               type="button"
               id={Styles.btnFilter}
               className={Styles.btnsForm}
-              onClick={toggleFilterMenu}
+              onClick={openFilterMenu}
             >
               <img
                 id={Styles.filterIcon}
@@ -228,12 +244,27 @@ const Home = () => {
             {/* Menú desplegable */}
             {isFilterMenuOpen && (
               <div className={Styles.filterMenu}>
+                {/* Ícono de cerrar */}
+                <span
+                  onClick={closeFilterMenu}
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                    color: "#333"
+                  }}
+                >
+                  ✖
+                </span>
                 <label htmlFor="minDays">Mínimo de días:</label>
                 <input
                   type="number"
                   id="minDays"
-                  value={minDays}
-                  onChange={(e) => setMinDays(e.target.value)}
+                  value={tempMinDays}
+                  onChange={(e) => setTempMinDays(e.target.value)}
                   placeholder="Ej: 3"
                 />
 
@@ -241,10 +272,19 @@ const Home = () => {
                 <input
                   type="number"
                   id="maxDays"
-                  value={maxDays}
-                  onChange={(e) => setMaxDays(e.target.value)}
+                  value={tempMaxDays}
+                  onChange={(e) => setTempMaxDays(e.target.value)}
                   placeholder="Ej: 7"
                 />
+
+                <button
+                  type="button"
+                  id={Styles.acceptButton}
+                  className={Styles.btnsForm}
+                  onClick={applyFilters}
+                >
+                  Aceptar
+                </button>
               </div>
             )}
 

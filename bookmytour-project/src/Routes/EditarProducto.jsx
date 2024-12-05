@@ -13,6 +13,7 @@ const EditarProducto = () => {
   const { state } = useContextGlobalStates();
   const { updateTour } = useTours();
   const navigate = useNavigate();
+  const [cities, setCities] = useState([]);
   const { id } = useParams();
 
   const tour = state.data.find((tour) => tour.tourId === parseInt(id));
@@ -21,7 +22,7 @@ const EditarProducto = () => {
     nombre: tour.name,
     categoria: tour.categoryName,
     costo: tour.costPerPerson,
-    ciudad: tour.cityNames.join(", "),
+    ciudad: tour.cityNames || [],
     duracion: tour.duration,
     resumen: tour.summary,
     descripcion: tour.description,
@@ -48,8 +49,18 @@ const EditarProducto = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    async function fetchCities() {
+      const response = await fetch("https://bookmytourweb.online/api/cities");
+      const data = await response.json();
+      setCities(data);
+    }
+    fetchCities();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
+    console.log(name, value);
     setFormData({
       ...formData,
       [name]: type === "file" ? files[0] : value,
@@ -159,15 +170,39 @@ const EditarProducto = () => {
                 onChange={handleChange}
                 customClass={Styles.formInput}
               />
-              <TextInput
-                label="Ciudad"
-                placeholder="Ingresa la ciudad del tour"
-                type="text"
-                name="ciudad"
-                value={formData.ciudad}
-                onChange={handleChange}
-                customClass={Styles.formInput}
-              />
+
+              <div>
+                <label htmlFor="select">Ciudades:</label>
+                <select
+                  id="selectCities"
+                  name="ciudad"
+                  multiple
+                  onChange={(e) => {
+                    // Obtener las opciones seleccionadas
+                    const options = Array.from(e.target.selectedOptions);
+                    const selectedValues = options.map(
+                      (option) => option.value
+                    );
+
+                    // Reemplazar las ciudades anteriores por las nuevas seleccionadas
+                    setFormData({
+                      ...formData, // Mantener el resto del estado sin cambios
+                      ciudad: selectedValues, // Solo actualizar las ciudades
+                    });
+                  }}
+                  value={formData.ciudad} // El estado actualizado de ciudades seleccionadas
+                >
+                  <option value="" disabled>
+                    Selecciona las ciudades
+                  </option>
+                  {cities.map((city) => (
+                    <option key={city.cityId} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <TextInput
                 label="Duración"
                 placeholder="Ingresa la duración del tour, por ejemplo: 3 dias 4 noches"

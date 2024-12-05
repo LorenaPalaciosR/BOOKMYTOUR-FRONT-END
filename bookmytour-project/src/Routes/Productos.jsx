@@ -76,7 +76,7 @@ const Productos = () => {
     // Filtrar por término de búsqueda
     if (searchTerm) {
       filteredData = filteredData.filter((item) =>
-        item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -85,7 +85,7 @@ const Productos = () => {
       filteredData = filteredData.sort((a, b) => b.id - a.id); // Ordena por ID de mayor a menor
     } else if (sortOrder === "name") {
       filteredData = filteredData.sort(
-        (a, b) => a.nombre.localeCompare(b.nombre) // Ordena alfabéticamente por nombre
+        (a, b) => a.name.localeCompare(b.name) // Ordena alfabéticamente por nombre
       );
     } else if (sortOrder === "") {
       // Si es "Ninguno", ordenar en orden ascendente por ID

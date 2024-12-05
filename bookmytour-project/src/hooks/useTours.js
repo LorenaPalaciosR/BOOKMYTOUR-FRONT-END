@@ -37,28 +37,31 @@ export const useTours = () => {
     }
   }, []);
 
-  const updateTour = useCallback(async (id, formDataToSend) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.put(`http://34.239.141.92:8080/api/tours/${id}`, formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+  const updateTour = useCallback(
+    async (id, tourData) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await tourService.updateTour(id, tourData);
+        console.log("que enbvio", response);
+        setTours((prev) =>
+          prev.map((tour) => (tour.tourId === id ? response.data : tour))
+        );
 
-      const data = response.data;
-      return data;
-    } catch (err) {
-      setError(err.response?.data?.message || "Error al actualizar el tour");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+        setTimeout(() => {
+          fetchTours();
+        }, 1000);
 
-
-
+        return response.data;
+      } catch (err) {
+        setError(err.response?.data?.message || "Error al actualizar el tour");
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchTours]
+  );
 
   const deleteTour = useCallback(async (id) => {
     setLoading(true);
@@ -75,6 +78,20 @@ export const useTours = () => {
     }
   }, []);
 
+  const getTourById = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await tourService.getTourById(id);
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.message || "Error al obtener el tour");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     tours,
     loading,
@@ -83,5 +100,6 @@ export const useTours = () => {
     createTour,
     updateTour,
     deleteTour,
+    getTourById,
   };
 };

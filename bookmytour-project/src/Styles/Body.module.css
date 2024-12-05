@@ -63,6 +63,11 @@
   cursor: pointer;
 }
 
+#acceptButton {
+  background-color: #04adbf;
+  color: #ffffff;
+}
+
 #btnSubmit {
   width: 135px;
   height: 48px;

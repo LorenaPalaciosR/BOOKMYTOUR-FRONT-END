@@ -7,5 +7,6 @@ export const routes = {
   listaUsuarios: "/usuarios",
   agregarProducto: "/agregarProducto",
   editarProducto: "/editarProducto/:id",
+  reservarProducto: "/reservarProducto/:id",
   notFound: "*",
 };
