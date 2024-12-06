@@ -74,7 +74,7 @@
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 .sectionFooter2 Link a {
   color: #333; 
