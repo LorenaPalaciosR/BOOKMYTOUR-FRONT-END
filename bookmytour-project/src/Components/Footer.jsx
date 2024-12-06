@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { routes } from "./utils/routes";
 import StylesFooter from "../Styles/Footer.module.css";
+import Politica from "../Routes/Politicas";
 
 const Footer = () => {
   return (
@@ -29,7 +30,7 @@ const Footer = () => {
       </section>
       <section className={StylesFooter.sectionFooter2}>
         <p>Sobre nosotros</p>
-        <p>Politica de privacidad</p>
+        <Link to={routes.politicasUsuario}><p>Politica de privacidad</p></Link>
         <p>Contáctanos</p>
       </section>
       <section className={StylesFooter.sectionFooter3}>

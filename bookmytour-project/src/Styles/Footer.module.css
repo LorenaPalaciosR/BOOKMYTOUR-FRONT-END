@@ -66,6 +66,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  
 }
 
 .sectionFooter2 > p {
@@ -73,6 +74,15 @@
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
+}
+.sectionFooter2 Link a {
+  color: #333; 
+  font-size: 16px;
+  text-decoration: none;
+  margin: 0; 
+  cursor: pointer;
+
 }
 
 .sectionFooter3 {
