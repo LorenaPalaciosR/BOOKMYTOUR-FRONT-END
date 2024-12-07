@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 
 const lsFavs = JSON.parse(localStorage.getItem("favs")) || [];
-export const initialState = { theme: "", data: [], categories: [], user: null, favs: [] };
+export const initialState = { theme: "", data: [], categories: [], user: null, favs: lsFavs };
 
 const reducer = (state, action) => {
   switch (action.type) {
