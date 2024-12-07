@@ -6,15 +6,21 @@ import Swal from "sweetalert2";
 import Slider from "react-slick";
 import Characteristics from "../Components/Characteristics";
 import MyCalendar from "../Components/MyCalendar";
+import React from 'react'
 
 const Detail = () => {
   const { id } = useParams();
-  const { state } = useContextGlobalStates();
+  const { state, dispatch  } = useContextGlobalStates();
   const navigate = useNavigate();
   const [zoomImage, setZoomImage] = useState(null);
 
   // Filtrar el tour específico según el ID
   const tour = state.data.find((tour) => tour.tourId === parseInt(id));
+
+  const isFav = state.favs.find((favid) => favid === tour.tourId);
+  const addFav = () => dispatch({ type: isFav ? "REMOVE_FAV" : "ADD_FAV", payload: tour.tourId });
+  const user = localStorage.getItem("user");
+  const usuario = JSON.parse(user);
 
   if (!tour) {
     return <div style={{ height: "100vh" }}>Tour no encontrado</div>; // Mensaje si el tour no se encuentra
@@ -104,6 +110,11 @@ const Detail = () => {
                 }}
               >
                 <h4>{tour.name}</h4>
+                {!usuario ||
+                  !usuario.usuario ||
+                  usuario.usuario.rol.rolName === "ADMIN" ? <span></span> 
+                  : <button className={Styles.favButton} onClick={addFav}>{isFav ? "❤️" : "🤍"}</button>
+                }
                 <h5 style={{ textAlign: "end" }}>$ {tour.costPerPerson}</h5>
               </div>
               <div

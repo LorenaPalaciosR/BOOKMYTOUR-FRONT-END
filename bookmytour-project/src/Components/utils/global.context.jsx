@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 
-export const initialState = { theme: "", data: [], categories: [], user: null };
+const lsFavs = JSON.parse(localStorage.getItem("favs")) || [];
+export const initialState = { theme: "", data: [], categories: [], user: null, favs: lsFavs };
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -12,6 +13,13 @@ const reducer = (state, action) => {
       return { ...state, user: action.payload };
     case "LOG_OUT":
       return { ...state, user: null };
+    case "ADD_FAV":
+      return { ...state, favs: [...state.favs, action.payload] };
+    case "REMOVE_FAV":
+      const filteredFavs = state.favs.filter(
+        (favid) => favid !== action.payload
+      );
+      return { ...state, favs: filteredFavs };
     default:
       throw new Error("Acción inexistente");
   }

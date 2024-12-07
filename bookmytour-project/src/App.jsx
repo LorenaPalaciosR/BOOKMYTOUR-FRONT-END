@@ -13,6 +13,7 @@ import ListaUsuarios from "./Routes/ListaUsuarios";
 import AgregarProducto from "./Routes/AgregarProducto";
 import EditarProducto from "./Routes/EditarProducto";
 import ReservarProducto from "./Routes/ReservarProducto";
+import Favoritos from "./Routes/Favoritos";
 import Politica from "./Routes/Politicas";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path={routes.listaUsuarios} element={<ListaUsuarios />} />
           <Route path={routes.agregarProducto} element={<AgregarProducto />} />
           <Route path={routes.editarProducto} element={<EditarProducto />} />
+          <Route path={routes.favoritos} element={<Favoritos />} />
           <Route path ={routes.politicasUsuario} element={<Politica/>}/>
           <Route
             path={routes.reservarProducto}

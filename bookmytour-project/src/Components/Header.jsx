@@ -180,6 +180,13 @@ const Header = () => {
                         </Link>
                       </>
                     )}
+                    {!isAdmin && (
+                      <>
+                        <Link to="/favoritos" onClick={closeMenuDesktop}>
+                          Favoritos
+                        </Link>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -261,6 +268,13 @@ const Header = () => {
                     </>
                   )}
                 </div>
+                {!isAdmin && (
+                      <>
+                        <Link to="/favoritos" onClick={closeMenuDesktop}>
+                          Favoritos
+                        </Link>
+                      </>
+                    )}
                 <span
                   style={{
                     color: "#61AAC9",
