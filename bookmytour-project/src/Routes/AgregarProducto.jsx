@@ -12,7 +12,7 @@ const AgregarProducto = () => {
     categoria: "",
     costo: "",
     disponibilidad: "",
-    ciudad: "",
+    ciudad: [],
     duracion: "",
     imagen: [],
     resumen: "",
