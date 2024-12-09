@@ -27,7 +27,8 @@ const TextInput = ({
           className={Styles.formInput}
           type={showPassword && type === "password" ? "text" : type}
           placeholder={placeholder}
-          value={value}
+          value={onChange ? value : undefined}
+          defaultValue={value}
           onChange={onChange}
           name={name}
         />

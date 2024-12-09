@@ -1,112 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContextGlobalStates } from "../Components/utils/global.context";
 import Button from "../Components/Button";
-import MyCalendar from "../Components/MyCalendar";
-import TextInput from "../Components/TextInput";
 import Styles from "../Styles/Detalle.module.css";
-
-const TourInformationSection = ({ tour, onChangeDates }) => (
-  <section className={Styles.formSection}>
-    <p>Información del tour</p>
-    <TextInput
-      label="Tour"
-      type="text"
-      name="tour-name"
-      value={tour.name}
-      readonly
-      customClass={Styles.formInput}
-    />
-    <TextInput
-      label="Ubicación"
-      type="text"
-      name="ubicacion"
-      value={tour.cityNames.join(", ")}
-      readonly
-      customClass={Styles.formInput}
-    />
-    <TextInput
-      label="Categoría"
-      type="text"
-      name="categoria"
-      value={tour.categoryName}
-      readonly
-      customClass={Styles.formInput}
-    />
-    <TextInput
-      label="Duración"
-      type="text"
-      name="duracion"
-      value={tour.duration}
-      readonly
-      customClass={Styles.formInput}
-    />
-    <div className={Styles.dateContainer}>
-      <label htmlFor="date">Fechas</label>
-      <MyCalendar
-        duration={Number(tour.duration.split(" ")[0])}
-        onChangeDates={onChangeDates}
-      />
-    </div>
-  </section>
-);
-
-const UserInformationSection = ({ user, formData, setFormData }) => (
-  <section className={Styles.formSection}>
-    <p>Información del usuario</p>
-    <TextInput
-      label="Nombre"
-      type="text"
-      name="nombre"
-      value={user.usuario.firstName}
-      readonly
-      customClass={Styles.formInput}
-    />
-    <TextInput
-      label="Apellido"
-      type="text"
-      name="apellido"
-      value={user.usuario.lastName}
-      readonly
-      customClass={Styles.formInput}
-    />
-    <TextInput
-      label="Correo electrónico"
-      type="text"
-      name="correo"
-      value={user.usuario.email}
-      readonly
-      customClass={Styles.formInput}
-    />
-    <div className={Styles.paymentMethodContainer}>
-      <label htmlFor="select">Método de pago:</label>
-      <select
-        id="select"
-        name="metodoPago"
-        value={formData.metodoPago}
-        onChange={(e) =>
-          setFormData({ ...formData, metodoPago: e.target.value })
-        }
-      >
-        <option value="" disabled>
-          Selecciona un método de pago
-        </option>
-        {[
-          "Visa",
-          "Mastercard",
-          "American Express",
-          "Diners Club",
-          "Discover",
-          "Carta de Crédito",
-        ].map((method) => (
-          <option key={method} value={method}>
-            {method}
-          </option>
-        ))}
-      </select>
-    </div>
-  </section>
-);
+import TourInformationSection from "../Components/TourInformationSection";
+import UserInformationSection from "../Components/UserInformationSection";
+import { useBooking } from "../hooks/useBooking";
+import { toast, ToastContainer } from "react-toastify";
+import { routes } from "../Components/utils/routes";
 
 const TourImagePreview = ({ images }) => (
   <div className={Styles.imagePreviewContainer}>
@@ -131,7 +32,7 @@ const PurchaseSummary = ({ tour, paymentMethod, formData }) => (
     <div className={Styles.cartSummary}>
       <p>Fechas seleccionadas</p>
       <span>
-        {formData.fechaInicio} - {formData.fechaFin}
+        {formData.bookingDate} - {formData.endDate}
       </span>
     </div>
     <div className={Styles.cartSummary}>
@@ -150,15 +51,18 @@ const PurchaseSummary = ({ tour, paymentMethod, formData }) => (
 );
 
 const ReservarProducto = () => {
-  const { state } = useContextGlobalStates();
+  const { state, fetchTours } = useContextGlobalStates();
   const { id } = useParams();
   const navigate = useNavigate();
+  const { createBooking } = useBooking();
+
   const [formData, setFormData] = React.useState({
-    tourId: id,
+    tourId: Number(id),
     userId: state.user.usuario.userId,
-    metodoPago: "",
-    fechaInicio: "",
-    fechaFin: "",
+    status: "CONFIRMED",
+    bookingDate: "",
+    endDate: "",
+    paymentMethod: "",
   });
 
   const tour = useMemo(
@@ -167,15 +71,50 @@ const ReservarProducto = () => {
   );
 
   const handleDateChange = (start, end) => {
-    const formattedStart = start ? start.toLocaleDateString() : "";
-    const formattedEnd = end ? end.toLocaleDateString() : "";
+    const formattedStart = start
+      ? start.toISOString("").replace(/\//g, "-").split("T")[0]
+      : "";
+    const formattedEnd = end
+      ? end.toISOString().replace(/\//g, "-").split("T")[0]
+      : "";
 
     setFormData((prevData) => ({
       ...prevData,
-      fechaInicio: formattedStart,
-      fechaFin: formattedEnd,
+      bookingDate: formattedStart,
+      endDate: formattedEnd,
     }));
   };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const booking = await createBooking(formData);
+      if (booking) {
+        toast.success("Reserva exitosa!", {
+          position: "top-center",
+        });
+      }
+      fetchTours();
+      setTimeout(() => {
+        navigate(routes.misReservas);
+      }, 1000);
+    } catch (err) {
+      if (err.response && err.response.status === 409) {
+        toast.error("La reserva ya existe", {
+          position: "top-center",
+        });
+      } else {
+        toast.error("Hubo un error al crear la reserva", {
+          position: "top-center",
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchTours();
+  }, []);
 
   if (!tour) {
     return <div>Tour not found</div>;
@@ -183,6 +122,7 @@ const ReservarProducto = () => {
 
   return (
     <div className={Styles.reservationContainer}>
+      <ToastContainer position="top-center" />
       <header className={Styles.pageHeader}>
         <h2>Reservar tour</h2>
         <p>{tour.name}</p>
@@ -203,7 +143,7 @@ const ReservarProducto = () => {
           <TourImagePreview images={tour.imagenes} />
           <PurchaseSummary
             tour={tour}
-            paymentMethod={formData.metodoPago}
+            paymentMethod={formData.paymentMethod}
             formData={formData}
           />
           <div className={Styles.actionButtons}>
@@ -213,7 +153,12 @@ const ReservarProducto = () => {
               type="submit"
               onClick={() => navigate(-1)}
             />
-            <Button label="Reservar" variant="primary" type="submit" />
+            <Button
+              onClick={handleSubmit}
+              label="Reservar"
+              variant="primary"
+              type="submit"
+            />
           </div>
         </div>
       </div>

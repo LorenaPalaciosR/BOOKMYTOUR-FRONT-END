@@ -1,7 +1,13 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 
 const lsFavs = JSON.parse(localStorage.getItem("favs")) || [];
-export const initialState = { theme: "", data: [], categories: [], user: null, favs: lsFavs };
+export const initialState = {
+  theme: "",
+  data: [],
+  categories: [],
+  user: null,
+  favs: lsFavs,
+};
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -30,6 +36,28 @@ const ContextGlobal = createContext(undefined);
 export const ContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const fetchTours = async () => {
+    try {
+      const response = await fetch("https://bookmytourweb.online/api/tours");
+      const data = await response.json();
+      dispatch({ type: "GET_TOURS", payload: data });
+    } catch (error) {
+      console.error("Error fetching tours:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        "https://bookmytourjson.s3.us-east-1.amazonaws.com/categories.json"
+      );
+      const data = await response.json();
+      dispatch({ type: "GET_CATEGORIES", payload: data });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -39,25 +67,12 @@ export const ContextProvider = ({ children }) => {
       });
     }
 
-    async function fetchData() {
-      const response = await fetch("https://bookmytourweb.online/api/tours");
-      const data = await response.json();
-      dispatch({ type: "GET_TOURS", payload: data });
-    }
-
-    fetchData();
-    async function fetchCategories() {
-      const response = await fetch(
-        "https://bookmytourjson.s3.us-east-1.amazonaws.com/categories.json"
-      );
-      const data = await response.json();
-      dispatch({ type: "GET_CATEGORIES", payload: data });
-    }
+    fetchTours();
     fetchCategories();
   }, []);
 
   return (
-    <ContextGlobal.Provider value={{ state, dispatch }}>
+    <ContextGlobal.Provider value={{ state, dispatch, fetchTours }}>
       {children}
     </ContextGlobal.Provider>
   );

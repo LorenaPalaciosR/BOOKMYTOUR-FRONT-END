@@ -9,6 +9,7 @@ export const routes = {
   editarProducto: "/editarProducto/:id",
   reservarProducto: "/reservarProducto/:id",
   favoritos: "/favoritos",
-  politicasUsuario:"/PoliticasUsuario",
+  politicasUsuario: "/PoliticasUsuario",
+  misReservas: "/misReservas",
   notFound: "*",
 };
