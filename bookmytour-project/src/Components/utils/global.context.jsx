@@ -40,7 +40,7 @@ export const ContextProvider = ({ children }) => {
     fetchData();
     async function fetchCategories() {
       const response = await fetch(
-        "https://bookmytourjson.s3.us-east-1.amazonaws.com/categories.json"
+        "https://bookmytourweb.online/api/categories"
       );
       const data = await response.json();
       dispatch({ type: "GET_CATEGORIES", payload: data });

@@ -22,13 +22,13 @@ const Categorias = () => {
 
   // Find the selected category
   const selectedCategory = state.categories.find(
-    (category) => category.nombre === nombre
+    (category) => category.name === nombre
   );
 
   // If the category is found, display the image and description
-  const categoryImage = selectedCategory ? selectedCategory.imagen : "";
+  const categoryImage = selectedCategory ? selectedCategory.imageUrl : "";
   const categoryDescription = selectedCategory
-    ? selectedCategory.descripcion
+    ? selectedCategory.description
     : "";
 
   // Filtrar los elementos de acuerdo a la categoría y al filtro de búsqueda
@@ -116,13 +116,13 @@ const Categorias = () => {
         {state.categories.map((item) => {
           return (
             <Link
-              to={`${window.location.origin}/categorias/${item.nombre}`}
-              key={item.nombre}
+              to={`${window.location.origin}/categorias/${item.name}`}
+              key={item.name}
               className={`btnsCategorias ${
-                item.nombre === nombre ? "active" : ""
+                item.name === nombre ? "active" : ""
               }`}
             >
-              {item.nombre}
+              {item.name}
             </Link>
           );
         })}
