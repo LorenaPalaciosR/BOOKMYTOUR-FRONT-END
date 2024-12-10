@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { routes } from "./utils/routes";
 import StylesFooter from "../Styles/Footer.module.css";
 import Politica from "../Routes/Politicas";
+import BotonWsp from "./BotonWsp";
 
 const Footer = () => {
   return (
@@ -51,6 +52,10 @@ const Footer = () => {
               </li>
               <li className={StylesFooter.buttonRedSocial}>
                 <img src="/icons/twitter.svg" alt="twitter" />
+              </li>
+              <li className={StylesFooter.buttonRedSocial}>
+                <BotonWsp/> 
+                <img src="/icons/whatsapp.png" alt="whatsapp" />
               </li>
             </ul>
           </nav>

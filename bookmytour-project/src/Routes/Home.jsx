@@ -5,6 +5,7 @@ import Card from "../Components/Card.jsx";
 import { useContextGlobalStates } from "../Components/utils/global.context.jsx";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
+import BotonWsp from '../Components/BotonWsp.jsx'
 
 const Home = () => {
   const { state } = useContextGlobalStates();
@@ -367,6 +368,7 @@ const Home = () => {
               description={item.summary}
             />
           ))}
+       
         </div>
 
         {/* Paginación con flechas */}
@@ -399,6 +401,7 @@ const Home = () => {
             </button>
           </div>
         )}
+        
       </div>
 
       <div className={Styles.recommendations}>
@@ -414,9 +417,12 @@ const Home = () => {
               description={tour.summary}
             />
           ))}
+          
         </div>
       </div>
+     
     </div>
+   
   );
 };
 
