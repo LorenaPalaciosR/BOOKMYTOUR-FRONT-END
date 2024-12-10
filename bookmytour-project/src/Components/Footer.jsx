@@ -30,7 +30,9 @@ const Footer = () => {
       </section>
       <section className={StylesFooter.sectionFooter2}>
         <p>Sobre nosotros</p>
-        <Link to={routes.politicasUsuario}><p>Politica de privacidad</p></Link>
+        <Link to={routes.politicasUsuario} className={StylesFooter.link}>
+          <p>Politica de privacidad</p>
+        </Link>
         <p>Contáctanos</p>
       </section>
       <section className={StylesFooter.sectionFooter3}>

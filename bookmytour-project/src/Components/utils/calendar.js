@@ -20,3 +20,22 @@ export const calculateEndDate = (startDate, duration) => {
   calculatedEndDate.setDate(calculatedEndDate.getDate() + duration - 1);
   return calculatedEndDate;
 };
+
+export function expandDateRanges(dateRanges) {
+  const expandedDates = [];
+
+  dateRanges.forEach((range) => {
+    const [start, end] = range.split(" - ");
+    let currentDate = new Date(start);
+    currentDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(end);
+    endDate.setHours(0, 0, 0, 0);
+
+    while (currentDate <= endDate) {
+      expandedDates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  });
+
+  return expandedDates;
+}

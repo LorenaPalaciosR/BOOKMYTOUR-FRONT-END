@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { tourService } from "../services/api/tourService";
-import axios from "axios";
 
 export const useTours = () => {
   const [tours, setTours] = useState([]);

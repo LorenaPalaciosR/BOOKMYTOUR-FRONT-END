@@ -180,6 +180,16 @@ const Header = () => {
                         </Link>
                       </>
                     )}
+                    {!isAdmin && (
+                      <>
+                        <Link to="/favoritos" onClick={closeMenuDesktop}>
+                          Favoritos
+                        </Link>
+                        <Link to="/misReservas" onClick={closeMenuDesktop}>
+                          Mis reservas
+                        </Link>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -261,6 +271,13 @@ const Header = () => {
                     </>
                   )}
                 </div>
+                {!isAdmin && (
+                  <>
+                    <Link to="/favoritos" onClick={closeMenuDesktop}>
+                      Favoritos
+                    </Link>
+                  </>
+                )}
                 <span
                   style={{
                     color: "#61AAC9",

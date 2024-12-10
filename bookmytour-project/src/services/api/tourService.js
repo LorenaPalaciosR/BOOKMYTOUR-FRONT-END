@@ -2,7 +2,11 @@ import apiClient from "./config";
 
 export const tourService = {
   getAllTours: async () => {
-    return await apiClient.get("/tours");
+    return await apiClient.get("/tours", {
+      headers: {
+        Authorization: null,
+      },
+    });
   },
 
   getTourById: async (id) => {

@@ -8,6 +8,8 @@ export const routes = {
   agregarProducto: "/agregarProducto",
   editarProducto: "/editarProducto/:id",
   reservarProducto: "/reservarProducto/:id",
-  politicasUsuario:"/PoliticasUsuario",
+  favoritos: "/favoritos",
+  politicasUsuario: "/PoliticasUsuario",
+  misReservas: "/misReservas",
   notFound: "*",
 };

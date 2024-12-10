@@ -5,12 +5,15 @@ import { validateRange, calculateEndDate } from "./utils/calendar";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const MyCalendar = ({ customProps, duration, onChangeDates }) => {
+const MyCalendar = ({
+  customProps,
+  duration,
+  excludedDates,
+  onChangeDates,
+}) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [error, setError] = useState(null);
-
-  const excludedDates = [new Date(2024, 11, 4), new Date(2024, 11, 21)];
 
   useEffect(() => {
     if (onChangeDates && startDate && endDate) {

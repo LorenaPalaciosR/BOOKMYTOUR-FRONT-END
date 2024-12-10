@@ -290,7 +290,13 @@
     gap: 10px;
   }
 
-  
+  .favButton{
+    background-color: rgba(136, 136, 136, 0.116);
+    padding: 10px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+  }
 
 @media (max-width: 1700px) {
     .mainImage {
@@ -301,6 +307,18 @@
 }
 
 @media (max-width: 1024px) {
+
+    .reservationContent {
+        gap: 1rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .imagePreviewContainer {
+        padding-top: 1rem;
+      }
+
     .container {
         flex-direction: column;
         gap: 0;
@@ -367,6 +385,9 @@
 }
 
 @media (max-width: 700px) {  
+
+
+
     .tourInfoContainer {
         flex-direction: column;
         align-items: center;

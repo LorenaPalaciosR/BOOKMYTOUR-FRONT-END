@@ -6,15 +6,22 @@ import Swal from "sweetalert2";
 import Slider from "react-slick";
 import Characteristics from "../Components/Characteristics";
 import MyCalendar from "../Components/MyCalendar";
+import { expandDateRanges } from "../Components/utils/calendar";
 
 const Detail = () => {
   const { id } = useParams();
-  const { state } = useContextGlobalStates();
+  const { state, dispatch } = useContextGlobalStates();
   const navigate = useNavigate();
   const [zoomImage, setZoomImage] = useState(null);
 
   // Filtrar el tour específico según el ID
   const tour = state.data.find((tour) => tour.tourId === parseInt(id));
+
+  const isFav = state.favs.find((favid) => favid === tour.tourId);
+  const addFav = () =>
+    dispatch({ type: isFav ? "REMOVE_FAV" : "ADD_FAV", payload: tour.tourId });
+  const user = localStorage.getItem("user");
+  const usuario = JSON.parse(user);
 
   if (!tour) {
     return <div style={{ height: "100vh" }}>Tour no encontrado</div>; // Mensaje si el tour no se encuentra
@@ -35,15 +42,13 @@ const Detail = () => {
     cssEase: "linear",
   };
 
+  const excludedDates = expandDateRanges(tour.fechasOcupadas);
   const handleSchedule = () => {
-    // Verifica si el usuario tiene el token
     const token = localStorage.getItem("token");
 
     if (token) {
-      // redirige al reservarProducto
       navigate(`/reservarProducto/${id}`);
     } else {
-      // Si el token no existe, muestra una alerta y redirige al login
       Swal.fire({
         title: "¡Oups!",
         text: "Para agendar un tour, necesitas estar logueado.",
@@ -104,6 +109,15 @@ const Detail = () => {
                 }}
               >
                 <h4>{tour.name}</h4>
+                {!usuario ||
+                !usuario.usuario ||
+                usuario.usuario.rol.rolName === "ADMIN" ? (
+                  <span></span>
+                ) : (
+                  <button className={Styles.favButton} onClick={addFav}>
+                    {isFav ? "❤️" : "🤍"}
+                  </button>
+                )}
                 <h5 style={{ textAlign: "end" }}>$ {tour.costPerPerson}</h5>
               </div>
               <div
@@ -144,6 +158,7 @@ const Detail = () => {
             }}
           >
             <MyCalendar
+              excludedDates={excludedDates}
               duration={Number(tour.duration.split(" ")[0])}
               customProps={{
                 inline: true,
