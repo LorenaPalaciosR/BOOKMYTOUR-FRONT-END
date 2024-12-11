@@ -55,8 +55,15 @@ const ReservarProducto = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { createBooking } = useBooking();
-  const [user, setUser] = useState(null);
   const [tour, setTour] = useState(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      // Si no hay un usuario en localStorage, redirige al home
+      navigate("/");
+    } 
+  }, [navigate]);
 
   const [formData, setFormData] = React.useState({
     tourId: Number(id),
@@ -68,19 +75,14 @@ const ReservarProducto = () => {
   });
 
   useEffect(() => {
-    if (state.user) {
-      setUser(state.user); 
-    }
-  }, [state.user]);
-
-  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setFormData((prevData) => ({
         ...prevData,
         userId: user.usuario.userId,
       }));
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     if (state.data && state.data.length > 0) {
@@ -153,7 +155,7 @@ const ReservarProducto = () => {
             onChangeDates={handleDateChange}
           />
           <UserInformationSection
-            user={user}
+            user={JSON.parse(localStorage.getItem("user"))}
             formData={formData}
             setFormData={setFormData}
           />
