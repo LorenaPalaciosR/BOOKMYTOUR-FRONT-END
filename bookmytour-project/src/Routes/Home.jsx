@@ -336,17 +336,17 @@ const Home = () => {
           <Slider {...settings}>
             {state.categories.map((item) => (
               <Link
-                key={item.nombre}
-                to={`${window.location.origin}/Categorias/${item.nombre}`}
+                key={item.name}
+                to={`${window.location.origin}/Categorias/${item.name}`}
               >
                 <div className={Styles.carouselItem}>
                   <div className={Styles.imageContainer}>
                     <img
-                      src={item.imagen}
-                      alt={item.nombre}
+                      src={item.imageUrl}
+                      alt={item.name}
                       className={Styles.carouselImage}
                     />
-                    <h3 className={Styles.imageText}>{item.nombre}</h3>
+                    <h3 className={Styles.imageText}>{item.name}</h3>
                   </div>
                 </div>
               </Link>

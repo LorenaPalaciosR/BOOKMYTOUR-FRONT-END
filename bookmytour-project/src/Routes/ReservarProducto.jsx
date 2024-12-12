@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContextGlobalStates } from "../Components/utils/global.context";
 import Button from "../Components/Button";
@@ -55,20 +55,41 @@ const ReservarProducto = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { createBooking } = useBooking();
+  const [tour, setTour] = useState(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      // Si no hay un usuario en localStorage, redirige al home
+      navigate("/");
+    } 
+  }, [navigate]);
 
   const [formData, setFormData] = React.useState({
     tourId: Number(id),
-    userId: state.user.usuario.userId,
+    userId: null,
     status: "CONFIRMED",
     bookingDate: "",
     endDate: "",
     paymentMethod: "",
   });
 
-  const tour = useMemo(
-    () => state.data.find((tour) => tour.tourId === parseInt(id)),
-    [state.data, id]
-  );
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setFormData((prevData) => ({
+        ...prevData,
+        userId: user.usuario.userId,
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (state.data && state.data.length > 0) {
+      const foundTour = state.data.find((tour) => tour.tourId === parseInt(id));
+      setTour(foundTour);
+    }
+  }, [state.data, id]);
 
   const handleDateChange = (start, end) => {
     const formattedStart = start
@@ -117,7 +138,7 @@ const ReservarProducto = () => {
   }, []);
 
   if (!tour) {
-    return <div>Tour not found</div>;
+    return <div>Tour no encontrado</div>;
   }
 
   return (
@@ -134,7 +155,7 @@ const ReservarProducto = () => {
             onChangeDates={handleDateChange}
           />
           <UserInformationSection
-            user={state.user}
+            user={JSON.parse(localStorage.getItem("user"))}
             formData={formData}
             setFormData={setFormData}
           />

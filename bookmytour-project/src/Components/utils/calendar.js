@@ -28,8 +28,10 @@ export function expandDateRanges(dateRanges) {
     const [start, end] = range.split(" - ");
     let currentDate = new Date(start);
     currentDate.setHours(0, 0, 0, 0);
+    currentDate.setDate(currentDate.getDate() + 1); 
     const endDate = new Date(end);
     endDate.setHours(0, 0, 0, 0);
+    endDate.setDate(endDate.getDate() + 1); 
 
     while (currentDate <= endDate) {
       expandedDates.push(new Date(currentDate));

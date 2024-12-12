@@ -134,6 +134,7 @@
     padding: 0px 350px 0px 350px;
     background-color: #027373;
     border-radius: 35px 35px 0px 0px;
+    min-height: 100vh;
   }
   
   .recommendations h2 {
