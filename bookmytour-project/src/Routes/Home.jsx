@@ -420,9 +420,9 @@ const Home = () => {
           
         </div>
       </div>
-      <div className={ Styles.buttonWspDiv}>
+     
       <BotonWsp/>
-      </div>
+     
    
     </div>
    
