@@ -37,7 +37,7 @@ const ContextGlobal = createContext(undefined);
 
 export const ContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-   const [isLoggedIn, setIsLoggedIn]= useState(false);
+   
 
   const fetchTours = async () => {
     try {
@@ -56,7 +56,7 @@ export const ContextProvider = ({ children }) => {
         type: "SET_USER",
         payload: JSON.parse(user),
       });
-      setIsLoggedIn(true)
+      
     }
 
     async function fetchData() {
