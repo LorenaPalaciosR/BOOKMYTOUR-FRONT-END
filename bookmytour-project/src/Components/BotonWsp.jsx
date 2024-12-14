@@ -1,18 +1,18 @@
 
 import Styles from "../Styles/BotonWsp.module.css";
-import { useContextGlobalStates } from "./utils/global.context";
+import { abrirWsp } from "./utils/abrirWsp";
 
 
 const BotonWsp = () => {
- /*    const {isLoggedIn}=useContextGlobalStates() */
-  
+const handleClick= ()=>{
     const numero = 573007906887;
-    const mensaje = "hola, tengo una consulta";
-    const wspUrl = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+    abrirWsp(numero)
+}
+  
     return (
        
             <div className={Styles.buttonWspDiv}>
-            <button onClick={() => (window.location.href = wspUrl)} className={Styles.buttonWsp}>
+            <button onClick={handleClick} className={Styles.buttonWsp}>
                 <img src="/icons/whatsapp.png" alt="whatsapp" />
             </button>
             </div>
