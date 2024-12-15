@@ -3,10 +3,21 @@ import { useContextGlobalStates } from "../Components/utils/global.context";
 import { useBooking } from "../hooks/useBooking";
 import { useEffect } from "react";
 import styles from "../Styles/MisReservas.module.css";
+import { useNavigate } from "react-router-dom";
 
 const MisReservas = () => {
   const { fetchBookings, bookings } = useBooking();
   const { state } = useContextGlobalStates();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      // Si no hay un usuario en localStorage, redirige al home
+      navigate("/");
+    } 
+  }, [navigate]);
 
   const filteredTours = bookings.filter((booking) =>
     booking.nombreUsuario

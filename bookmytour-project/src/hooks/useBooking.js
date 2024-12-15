@@ -24,6 +24,7 @@ export const useBooking = () => {
   const createBooking = useCallback(async (bookingData) => {
     setLoading(true);
     setError(null);
+    console.log(bookingData)
     try {
       const response = await bookingService.createBooking(bookingData);
       setBookings((prev) => [...prev, response.data]);

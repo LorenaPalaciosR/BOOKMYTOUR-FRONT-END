@@ -19,16 +19,32 @@ const EditarProducto = () => {
   const tour = state.data.find((tour) => tour.tourId === parseInt(id));
 
   const [formData, setFormData] = useState({
-    nombre: tour.name,
-    categoria: tour.categoryName,
-    costo: tour.costPerPerson,
-    ciudad: tour.cityNames || [],
-    duracion: tour.duration,
-    resumen: tour.summary,
-    descripcion: tour.description,
-    itinerario: tour.itinerary,
-    imagen: tour.imagenes,
+    nombre: "",
+    categoria: "",
+    costo: "",
+    ciudad: [],
+    duracion: "",
+    resumen: "",
+    descripcion: "",
+    itinerario: "",
+    imagen: [],
   });
+
+  useEffect(() => {
+    if (tour) {
+      setFormData({
+        nombre: tour.name,
+        categoria: tour.categoryName,
+        costo: tour.costPerPerson,
+        ciudad: tour.cityNames || [],
+        duracion: tour.duration,
+        resumen: tour.summary,
+        descripcion: tour.description,
+        itinerario: tour.itinerary,
+        imagen: tour.imagenes,
+      });
+    }
+  }, [tour]);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -101,28 +117,18 @@ const EditarProducto = () => {
         toast.success("Producto actualizado exitosamente!", {
           position: "top-center",
         });
-
-        if (updatedTour.details && typeof updatedTour.details === "object") {
-          Object.entries(updatedTour.details).forEach(([key, value]) => {
-            toast.info(`${key}: ${value}`, { position: "top-center" });
-          });
-        }
-
         previewUrls.forEach((url) => URL.revokeObjectURL(url));
         setPreviewUrls([]);
         setTimeout(() => {
           navigate("/productos");
         }, 1000);
-      } else {
-        toast.error(updatedTour.message, { position: "top-center" });
       }
     } catch (err) {
       console.error("Error al actualizar el producto:", err);
-      toast.error("Hubo un error al actualizar el producto", {
-        position: "top-center",
-      });
+      toast.error("Hubo un error al actualizar el producto");
     }
   };
+
   return (
     <div className={Styles.mainContainer}>
       <ToastContainer position="top-center" />

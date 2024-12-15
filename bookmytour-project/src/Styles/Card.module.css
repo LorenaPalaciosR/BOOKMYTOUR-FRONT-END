@@ -68,11 +68,6 @@
     cursor: pointer;
   }
 
-  button:hover{
-    background-color: rgba(4, 191, 191, 0.8); 
-    color: white;
-  } 
-
 @media (max-width: 860px) {
     .container {
         width: 100%;

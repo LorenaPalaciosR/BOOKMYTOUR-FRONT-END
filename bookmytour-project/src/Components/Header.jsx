@@ -273,8 +273,11 @@ const Header = () => {
                 </div>
                 {!isAdmin && (
                   <>
-                    <Link to="/favoritos" onClick={closeMenuDesktop}>
+                    <Link to="/favoritos" onClick={closeMenu}>
                       Favoritos
+                    </Link>
+                    <Link to="/misReservas" onClick={closeMenu}>
+                      Mis reservas
                     </Link>
                   </>
                 )}

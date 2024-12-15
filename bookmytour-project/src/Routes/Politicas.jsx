@@ -63,6 +63,8 @@ const Politica = () => {
             El usuario debe evitar comportamientos disruptivos y respetar la flora y fauna del entorno.
           </li>
         </ul>
+        <h2>Politicas de seguridad</h2>
+        <li>Bookmytour garantiza la seguridad y privacidad del usuario al utilizar el canal de whatsapp para comunicación </li>
       </div>
     );
   };

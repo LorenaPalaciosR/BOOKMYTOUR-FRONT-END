@@ -5,6 +5,7 @@ import Card from "../Components/Card.jsx";
 import { useContextGlobalStates } from "../Components/utils/global.context.jsx";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
+import BotonWsp from '../Components/BotonWsp.jsx'
 
 const Home = () => {
   const { state } = useContextGlobalStates();
@@ -335,17 +336,17 @@ const Home = () => {
           <Slider {...settings}>
             {state.categories.map((item) => (
               <Link
-                key={item.nombre}
-                to={`${window.location.origin}/Categorias/${item.nombre}`}
+                key={item.name}
+                to={`${window.location.origin}/Categorias/${item.name}`}
               >
                 <div className={Styles.carouselItem}>
                   <div className={Styles.imageContainer}>
                     <img
-                      src={item.imagen}
-                      alt={item.nombre}
+                      src={item.imageUrl}
+                      alt={item.name}
                       className={Styles.carouselImage}
                     />
-                    <h3 className={Styles.imageText}>{item.nombre}</h3>
+                    <h3 className={Styles.imageText}>{item.name}</h3>
                   </div>
                 </div>
               </Link>
@@ -367,6 +368,7 @@ const Home = () => {
               description={item.summary}
             />
           ))}
+       
         </div>
 
         {/* Paginación con flechas */}
@@ -399,6 +401,7 @@ const Home = () => {
             </button>
           </div>
         )}
+        
       </div>
 
       <div className={Styles.recommendations}>
@@ -414,9 +417,15 @@ const Home = () => {
               description={tour.summary}
             />
           ))}
+          
         </div>
       </div>
+     
+      <BotonWsp/>
+     
+   
     </div>
+   
   );
 };
 
