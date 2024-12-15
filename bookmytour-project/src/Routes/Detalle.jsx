@@ -108,23 +108,26 @@ const Detail = () => {
                   marginTop: "30px",
                 }}
               >
-                <h4>{tour.name}</h4>
-                {!usuario ||
-                !usuario.usuario ||
-                usuario.usuario.rol.rolName === "ADMIN" ? (
-                  <span></span>
-                ) : (
-                  <button className={Styles.favButton} onClick={addFav}>
-                    {isFav ? "❤️" : "🤍"}
-                  </button>
-                )}
-                <h5 style={{ textAlign: "end" }}>$ {tour.costPerPerson}</h5>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <h4 style={{ minWidth: "200px" }}>{tour.name}</h4>
+                  {!usuario ||
+                  !usuario.usuario ||
+                  usuario.usuario.rol.rolName === "ADMIN" ? (
+                    <span></span>
+                  ) : (
+                    <button className={Styles.favButton} onClick={addFav}>
+                      {isFav ? "❤️" : "🤍"}
+                    </button>
+                  )}
+                </div>
+                <h5 style={{ textAlign: "end", width: "100%" }}>
+                  $ {tour.costPerPerson}
+                </h5>
               </div>
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  marginTop: "10px",
                   marginBottom: "10px",
                 }}
               >

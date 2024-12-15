@@ -291,10 +291,10 @@
   }
 
   .favButton{
-    background-color: rgba(136, 136, 136, 0.116);
+    background-color: unset;
     padding: 10px;
     border: none;
-    width: 100%;
+    width: 10%;
     cursor: pointer;
   }
 
